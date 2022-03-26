@@ -24,9 +24,6 @@ typedef struct{
 
 int main()
 {
-    printf("Hola Mundo\n");
-    printf("Hola\n");
-    printf("rodrigo gracias por la ayuda");
-    printf("de nada, jota");
+    
     return 0;
 }
