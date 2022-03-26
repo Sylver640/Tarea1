@@ -7,7 +7,7 @@
 
 typedef struct{
     int cantidad;
-    // canciones(Lista);
+    List* canciones;
     char nombre[30];
 
 } ListaCanciones;
@@ -16,14 +16,14 @@ typedef struct{
     char nombreC[30];
     int year;
     char artista[15];
-    // generos(Lista);
-    // listaC(ListaCanciones);
+    List* generos;
+    ListaCanciones* listaC;
 
 
 } tipoCancion;
 
 int main()
 {
-    
+
     return 0;
 }
