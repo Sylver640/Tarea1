@@ -22,8 +22,8 @@ typedef struct{
 
 } tipoCancion;
 
-int main()
+void main()
 {
-
-    return 0;
+    FILE *archivoCanciones = fopen("Canciones.csv", "rw");
+    return;
 }
