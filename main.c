@@ -36,7 +36,8 @@ FILE* importCancion(char* nombre_archivo){
 
 }
 
-bool revisar_cancion(char *nombre,char * artista, char generos, int *ano,char * Lista_reproduccion, tipoCancion datos)
+//ESTO ESTÁ COMENTADO PORQUE TIENE PROBLEMAS PARA COMPILAR CUANDO LO IMPORTÉ, SI QUIEREN DSP PODEMOS VER CUAL DE LAS DOS FUNCIONES DEJAMOS
+/*bool revisar_cancion(char *nombre,char * artista, char generos, int *ano,char * Lista_reproduccion, tipoCancion datos)
 {
        void buscador;
        buscador = datos->listaC.head;
@@ -60,7 +61,7 @@ void agregar_cancion((char nombre, char* artista, char generos, int ano, char* L
         void pushFront( ingresar->generos, * generos);
         ingresar->year=ano;
 
-}
+}*/
 
 void agregarCancion (char* nombre, char* artista, char** géneros, int año, char* Lista_reproduccion)
 {
@@ -85,6 +86,7 @@ void agregarCancion (char* nombre, char* artista, char** géneros, int año, cha
                 else 
                 {
                         //pasar a la siguiente lista de reproducción
+                       listaDeReproduccion = nextList(listaDeListas);
                 }
         }
         //si la lista no existe, crearla
