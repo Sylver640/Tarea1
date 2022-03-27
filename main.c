@@ -6,11 +6,34 @@
 #include "list.h"
 
 typedef struct{
+    char nombreC[30];
+    int year;
+    char artista[15];
+    //List* generos; puede ser char**
+    //ListaCanciones* listaC; quizás no sea necesario esto 
+} tipoCancion;
+
+typedef struct Node Node;
+
+struct Node {
+    tipoCancion* data;
+    Node * next;
+    Node * prev;
+};
+
+struct List {
+    Node * head;
+    Node * tail;
+    Node * current;
+};
+
+typedef struct{
     int cantidad;
     List* canciones;
     char nombre[30];
 } ListaCanciones;
 
+<<<<<<< HEAD
 typedef struct{
     char nombreC[30];
     int year;
@@ -32,6 +55,8 @@ FILE* importCancion(char* nombre_archivo){
     }
 }
 
+=======
+>>>>>>> d418dfc (struct para agregar canciones)
 void main()
 {
     FILE *archivoCanciones;
@@ -85,3 +110,8 @@ void main()
     fclose(archivoCanciones);
     return;
 }
+
+/*agregar canción debe agregar un nodo a la lista 1, 2 o 3
+deberían ser listas separadas por algunos requerimientos de la tarea, en especial el 8
+lista enlazada de listas enlazadas, pueden ser tipos distintos (nodo de la lista base, nodo lista canciones etc) */
+
