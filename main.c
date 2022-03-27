@@ -7,13 +7,12 @@
 
 //crear lista de listas, global para que sea fácil de acceder desde distintas funciones (base de datos)
 List* listaDeListas = NULL;
+List* listaDeCanciones = NULL;
 
 typedef struct{
     char nombreC[30];
-    //char* nombreC;
     int year;
     char artista[15];
-    //char* artista;
     char** generos; //por las funciones que debemos implementar debería ser char**
     char* Lista_reproduccion; //faltaba esta variable para agregar canciones
     //ListaCanciones* listaC; quizás no sea necesario esto 
@@ -25,7 +24,7 @@ typedef struct{
     char nombre[30];
 } ListaCanciones;
 
-FILE* importCancion(char* nombre_archivo){
+/*FILE* importCancion(char* nombre_archivo){
         
     while (nombre_archivo != NULL)
     {
@@ -36,7 +35,7 @@ FILE* importCancion(char* nombre_archivo){
     FILE *archivoCanciones = fopen(nombre_archivo, "wt");
     return archivoCanciones;
 
-}
+}*/
 
 void agregarCancion (char* nombre, char* artista, char** generos, int anyo, char* Lista_reproduccion) 
 {
@@ -97,9 +96,44 @@ void agregarCancion (char* nombre, char* artista, char** generos, int anyo, char
         cancionActual->year = anyo;
         cancionActual->Lista_reproduccion = Lista_reproduccion;
 
-        //agregar canción 
+        //agregar canción a lista de listas y a la lista de canciones
         pushBack(listaDeReproduccion, cancionActual);
+        pushBack(listaDeCanciones, cancionActual);
 }
+
+/*void buscar_cancion(char nombre)
+{
+   List* lista_revisora = createList();
+   bool marcador = false;
+   if( listaDeListas == NULL)
+   {
+        printf("La canción buscada no existe en ninguna lista");
+   }
+   lista_revisora=firstList(listaDeListas);
+   char* revisor;
+   revisor=lista_revisora->head->nombre;
+   while(true)
+   {
+           if(revisor==nombre)
+           {
+                printf("los datos de la cancion");
+                marcador= true;
+           }
+           if(revisor->next != NULL)
+           {
+                revisor=revisor->next->nombre;
+           }
+           else{
+                  lista_revisora=nextList(listaDeListas);
+                  if(lista_revisora==NULL) break;
+                  revisor=lista_revisora->head->nombre;
+             }
+   }
+   if(marcador==false)
+   {
+           printf("no ta la cancion");
+   }
+}*/
 
 void main()
 {
@@ -110,6 +144,7 @@ void main()
     FILE* archivoCanciones;
     int option;
     char* archivo;
+    listaDeCanciones = createList();
 
     while (option != 11)
     {
@@ -136,16 +171,20 @@ void main()
                     break;
             case 2: printf("FUNCION NO IMPLEMENTADA\n");
                     break;
-            case 3: scanf("%s", nombre); //FALTAN HACER PRINTF PARA VER QUE DATO TENEMOS QUE INGRESAR, CON TODOS 
-                    scanf("%s", artista); //FALTA HACER UN PRINTF EN AGREGAR CANCION SI ES QUE YA ESTA EN UNA LISTA O SI HAY QUE CREAR UNA LISTA ETC
+            case 3: printf("Ingrese el nombre de la canción: ");
+                    scanf("%s\n", nombre);
+                    printf("Ingrese el artista de la canción: ");
+                    scanf("%s\n", artista); //FALTA HACER UN PRINTF EN AGREGAR CANCION SI ES QUE YA ESTA EN UNA LISTA O SI HAY QUE CREAR UNA LISTA ETC
                     //scanf("%s", generos);
-                    scanf("%d", &anyo);
-                    scanf("%s", Lista_reproduccion);
+                    printf("Ingrese el año de la canción: ");
+                    scanf("%d\n", &anyo);
+                    printf("Ingrese la lista de reproducción en donde quiere agregar la canción: ");
+                    scanf("%s\n", Lista_reproduccion);
                     agregarCancion(nombre, artista, generos, anyo, Lista_reproduccion);
-                    //revisar_cancion(nombre, artista, generos, ano, Lista_reproduccion, datos);
-                    //agregar_cancion( nombre, artista,  generos, ano,  Lista_reproduccion);
                     break;
-            case 4: printf("FUNCION NO IMPLEMENTADA\n");
+            case 4: printf("Ingrese el nombre de la canción que desea buscar\n");
+                    scanf("%s", &nombre);
+                    buscar_cancion(nombre);
                     break;
             case 5: printf("FUNCION NO IMPLEMENTADA\n");
                     break;
@@ -165,8 +204,3 @@ void main()
     fclose(archivoCanciones);
     return;
 }
-
-/*agregar canción debe agregar un nodo a la lista 1, 2 o 3
-deberían ser listas separadas por algunos requerimientos de la tarea, en especial el 8
-lista enlazada de listas enlazadas, pueden ser tipos distintos (nodo de la lista base, nodo lista canciones etc) */
-
