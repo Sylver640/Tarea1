@@ -13,20 +13,6 @@ typedef struct{
     ListaCanciones* listaC; //quizás no sea necesario esto 
 } tipoCancion;
 
-typedef struct Node Node;
-
-struct Node {
-    tipoCancion* data;
-    Node * next;
-    Node * prev;
-};
-
-struct List {
-    Node * head;
-    Node * tail;
-    Node * current;
-};
-
 typedef struct{
     int cantidad;
     List* canciones;
@@ -43,11 +29,41 @@ FILE* importCancion(char* nombre_archivo){
     } 
     FILE *archivoCanciones = fopen(nombre_archivo, "wt");
     return archivoCanciones;
+
+}
+
+bool revisar_cancion(char *nombre,char * artista, char generos, int *ano,char * Lista_reproduccion, tipoCancion datos)
+{
+       void buscador;
+       buscador = datos->listaC.head;
+       while(buscador != NULL && buscador.data!=Lista_reproduccion)
+       {
+           buscador=buscador->next;
+       }|
+       if(buscador==NULL)
+       {
+          datos->listaC = createList();
+       }
+
+}
+
+void agregar_cancion((char nombre, char* artista, char generos, int ano, char* Lista_reproducción)
+{
+
+        tipoCancion *ingresar;
+        strcpy(nombre,ingresar->nombre );
+        strcpy(artista, ingresar->artista );
+        void pushFront( ingresar->generos, * generos);
+        ingresar->year=ano;
+
 }
 
 void main()
 {
-    FILE *archivoCanciones;
+    char nombre, artista, generos, Lista_reproduccion;
+    int ano;
+    tipoCancion* datos;
+    FILE* archivoCanciones;
     int option;
     char* archivo;
 
@@ -76,7 +92,13 @@ void main()
                     break;
             case 2: printf("FUNCION NO IMPLEMENTADA\n");
                     break;
-            case 3: printf("FUNCION NO IMPLEMENTADA\n");
+            case 3: scanf("%s", &nombre);
+                    scanf("%s", &artista);
+                    scanf("%s", &generos);
+                    scanf("%d", &ano);
+                    scanf("%s", &Lista_reproduccion);
+                    revisar_cancion(nombre, artista, generos, ano, Lista_reproduccion, datos);
+                    agregar_cancion( nombre, artista,  generos, ano,  Lista_reproduccion);
                     break;
             case 4: printf("FUNCION NO IMPLEMENTADA\n");
                     break;
