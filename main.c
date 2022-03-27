@@ -36,7 +36,7 @@ void main()
         printf("8. Mostrar nombres de las listas de reproduccion\n");
         printf("9. Mostrar una lista de reproduccion\n");
         printf("10. Mostrar todas las canciones\n");
-        printf("11. Salir");
+        printf("11. Salir\n");
 
         printf("Indique la opcion: ");
         scanf("%i", &option);
