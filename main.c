@@ -13,7 +13,7 @@ typedef struct{
     char nombreC[30];
     int year;
     char artista[15];
-    char** generos; //por las funciones que debemos implementar debería ser char**
+    char* generos; //por las funciones que debemos implementar debería ser char**
     char* Lista_reproduccion; //faltaba esta variable para agregar canciones
     //ListaCanciones* listaC; quizás no sea necesario esto 
 } tipoCancion;
@@ -37,7 +37,7 @@ typedef struct{
 
 }*/
 
-void agregarCancion (char* nombre, char* artista, char** generos, int anyo, char* Lista_reproduccion) 
+void agregarCancion (char* nombre, char* artista, char* generos, int anyo, char* Lista_reproduccion) 
 {
         List* listaDeReproduccion = NULL;
         //inicializar la lista de listas si no se ha ocupado antes
@@ -79,6 +79,7 @@ void agregarCancion (char* nombre, char* artista, char** generos, int anyo, char
                 if (strcmp(cancionActual->nombreC, nombre) == 0)
                 {
                         //la canción ya está en la lista
+                        printf("LA CANCIÓN YA ESTÁ EN LA LISTA.\n");
                         return;
                 }
                 else
@@ -175,7 +176,8 @@ void main()
                     scanf("%s\n", nombre);
                     printf("Ingrese el artista de la canción: ");
                     scanf("%s\n", artista); //FALTA HACER UN PRINTF EN AGREGAR CANCION SI ES QUE YA ESTA EN UNA LISTA O SI HAY QUE CREAR UNA LISTA ETC
-                    //scanf("%s", generos);
+                    printf("Ingrese el género de la canción: ");
+                    scanf("%s\n", generos);
                     printf("Ingrese el año de la canción: ");
                     scanf("%d\n", &anyo);
                     printf("Ingrese la lista de reproducción en donde quiere agregar la canción: ");
