@@ -139,7 +139,7 @@ void agregarCancion (char* nombre, char* artista, char* generos, int anyo, char*
 void main()
 {
     char nombre[100], artista[100], Lista_reproduccion[100];
-    char** generos = NULL;
+    char* generos;
     int anyo;
     tipoCancion* datos;
     FILE* archivoCanciones;
@@ -172,21 +172,24 @@ void main()
                     break;
             case 2: printf("FUNCION NO IMPLEMENTADA\n");
                     break;
-            case 3: printf("Ingrese el nombre de la canción: ");
-                    scanf("%s\n", nombre);
-                    printf("Ingrese el artista de la canción: ");
-                    scanf("%s\n", artista); //FALTA HACER UN PRINTF EN AGREGAR CANCION SI ES QUE YA ESTA EN UNA LISTA O SI HAY QUE CREAR UNA LISTA ETC
-                    printf("Ingrese el género de la canción: ");
-                    scanf("%s\n", generos);
-                    printf("Ingrese el año de la canción: ");
-                    scanf("%d\n", &anyo);
-                    printf("Ingrese la lista de reproducción en donde quiere agregar la canción: ");
-                    scanf("%s\n", Lista_reproduccion);
+            case 3: printf("Ingrese el nombre de la cancion: ");
+                    scanf("%[^\n]s", nombre); //PROBLEMA
+                    getchar();
+                    printf("Ingrese el artista de la cancion: ");
+                    scanf("%[^\n]s", artista); //FALTA HACER UN PRINTF EN AGREGAR CANCION SI ES QUE YA ESTA EN UNA LISTA O SI HAY QUE CREAR UNA LISTA ETC
+                    getchar();
+                    printf("Ingrese el genero de la cancion: "); 
+                    scanf("%[^\n]s", generos); ////PROBLEMA
+                    getchar();
+                    printf("Ingrese el año de la cancion: ");
+                    scanf("%d", &anyo);
+                    printf("Ingrese la lista de reproduccion en donde quiere agregar la cancion: ");
+                    scanf("%[^\n]s", Lista_reproduccion);
                     agregarCancion(nombre, artista, generos, anyo, Lista_reproduccion);
                     break;
             case 4: printf("Ingrese el nombre de la canción que desea buscar\n");
                     scanf("%s", &nombre);
-                    buscar_cancion(nombre);
+                    //buscar_cancion(nombre); //FALTA TERMINAR FUNCIÓN 
                     break;
             case 5: printf("FUNCION NO IMPLEMENTADA\n");
                     break;
