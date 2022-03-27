@@ -33,6 +33,14 @@ typedef struct{
     char nombre[30];
 } ListaCanciones;
 
+void importCancion(char* nombre_archivo){
+     FILE *archivoCanciones = fopen(nombre_archivo, "wt");
+     if(nombre_archivo == NULL){
+             printf("NO EXISTE EL ARCHIVO CON ESE NOMBRE");
+             exit(1);
+     }
+}
+
 void main()
 {
     FILE *archivoCanciones;
