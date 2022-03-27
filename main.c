@@ -9,8 +9,8 @@ typedef struct{
     char nombreC[30];
     int year;
     char artista[15];
-    //List* generos; puede ser char**
-    //ListaCanciones* listaC; quizás no sea necesario esto 
+    List* generos; //puede ser char**
+    ListaCanciones* listaC; //quizás no sea necesario esto 
 } tipoCancion;
 
 typedef struct Node Node;
@@ -33,30 +33,6 @@ typedef struct{
     char nombre[30];
 } ListaCanciones;
 
-<<<<<<< HEAD
-typedef struct{
-    char nombreC[30];
-    int year;
-    char artista[15];
-    List* generos;
-    ListaCanciones* listaC;
-} tipoCancion;
-
-FILE* importCancion(char* nombre_archivo){
-    if(nombre_archivo == NULL)
-    {
-        printf("NO EXISTE EL ARCHIVO CON ESE NOMBRE");
-        return NULL;
-    } 
-    else 
-    {
-        FILE *archivoCanciones = fopen("nombre_archivo", "wt");
-        return archivoCanciones;
-    }
-}
-
-=======
->>>>>>> d418dfc (struct para agregar canciones)
 void main()
 {
     FILE *archivoCanciones;
