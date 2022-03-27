@@ -19,16 +19,22 @@ typedef struct{
     ListaCanciones* listaC;
 } tipoCancion;
 
-void importCancion(char* nombre_archivo){
-     FILE *archivoCanciones = fopen(nombre_archivo, "wt");
-     if(nombre_archivo == NULL){
-             printf("NO EXISTE EL ARCHIVO CON ESE NOMBRE");
-             exit(1);
-     }
+FILE* importCancion(char* nombre_archivo){
+    if(nombre_archivo == NULL)
+    {
+        printf("NO EXISTE EL ARCHIVO CON ESE NOMBRE");
+        return NULL;
+    } 
+    else 
+    {
+        FILE *archivoCanciones = fopen("nombre_archivo", "wt");
+        return archivoCanciones;
+    }
 }
 
 void main()
 {
+    FILE *archivoCanciones;
     int option;
     char* archivo;
 
@@ -52,8 +58,8 @@ void main()
         switch(option)
         {
             case 1: printf("\nIngrese el nombre del archivo: ");
-                    scanf("%c", &archivo);
-                    importCancion(archivo);
+                    scanf("%s", &archivo);
+                    archivoCanciones = importCancion(archivo);
                     break;
             case 2: printf("FUNCION NO IMPLEMENTADA\n");
                     break;
@@ -76,5 +82,6 @@ void main()
             case 11: break;
         }
     }
+    fclose(archivoCanciones);
     return;
 }
