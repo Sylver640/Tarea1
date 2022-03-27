@@ -139,7 +139,7 @@ void agregarCancion (char* nombre, char* artista, char* generos, int anyo, char*
 void main()
 {
     char nombre[100], artista[100], Lista_reproduccion[100];
-    char* generos;
+    char generos[100];
     int anyo;
     tipoCancion* datos;
     FILE* archivoCanciones;
@@ -173,6 +173,7 @@ void main()
             case 2: printf("FUNCION NO IMPLEMENTADA\n");
                     break;
             case 3: printf("Ingrese el nombre de la cancion: ");
+                    getchar();
                     scanf("%[^\n]s", nombre); //PROBLEMA
                     getchar();
                     printf("Ingrese el artista de la cancion: ");
@@ -183,6 +184,7 @@ void main()
                     getchar();
                     printf("Ingrese el año de la cancion: ");
                     scanf("%d", &anyo);
+                    getchar();
                     printf("Ingrese la lista de reproduccion en donde quiere agregar la cancion: ");
                     scanf("%[^\n]s", Lista_reproduccion);
                     agregarCancion(nombre, artista, generos, anyo, Lista_reproduccion);
