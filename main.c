@@ -10,11 +10,13 @@ List* listaDeListas = NULL;
 
 typedef struct{
     char nombreC[30];
+    //char* nombreC;
     int year;
     char artista[15];
+    //char* artista;
     char** generos; //por las funciones que debemos implementar debería ser char**
     char* Lista_reproduccion; //faltaba esta variable para agregar canciones
-    ListaCanciones* listaC; //quizás no sea necesario esto 
+    //ListaCanciones* listaC; quizás no sea necesario esto 
 } tipoCancion;
 
 typedef struct{
@@ -36,10 +38,10 @@ FILE* importCancion(char* nombre_archivo){
 
 }
 
-void agregarCancion (char* nombre, char* artista, char** géneros, int anyo, char* Lista_reproduccion) //No se puede usar la ñ en C para la variable "año", por lo que se cambiará a "anyo"
+void agregarCancion (char* nombre, char* artista, char** generos, int anyo, char* Lista_reproduccion) 
 {
         List* listaDeReproduccion = NULL;
-        //inicializar la lista de istas si no se ha ocupado antes
+        //inicializar la lista de listas si no se ha ocupado antes
         if (listaDeListas == NULL)
         {
                 listaDeListas = createList();
@@ -67,15 +69,43 @@ void agregarCancion (char* nombre, char* artista, char** géneros, int anyo, cha
         {
                 listaDeReproduccion = createList();
                 //agregarla  a la lista de listas
-
+                pushBack(listaDeListas, listaDeReproduccion);
         } 
 
+        //validar que la canción no esté ya en la lista de reproducción
+        tipoCancion* cancionActual = firstList(listaDeReproduccion); //primera canción de la lista de reproducción
+        while(cancionActual != NULL)
+        {
+                //comparar nombre de la canción
+                if (strcmp(cancionActual->nombreC, nombre) == 0)
+                {
+                        //la canción ya está en la lista
+                        return;
+                }
+                else
+                {
+                        //revisar siguiente canción
+                        cancionActual = nextList(listaDeReproduccion);
+                }
+        }
+
+        //la canción no está guardada, hay que agregarla en la lista (junto a todos los datos que trae)
+        cancionActual = (tipoCancion*)malloc(sizeof(tipoCancion));
+        strcpy(cancionActual->nombreC, nombre);
+        strcpy(cancionActual->artista, artista);
+        cancionActual->generos = generos;
+        cancionActual->year = anyo;
+        cancionActual->Lista_reproduccion = Lista_reproduccion;
+
+        //agregar canción 
+        pushBack(listaDeReproduccion, cancionActual);
 }
 
 void main()
 {
-    char nombre, artista, generos, Lista_reproduccion;
-    int ano;
+    char nombre[100], artista[100], Lista_reproduccion[100];
+    char** generos = NULL;
+    int anyo;
     tipoCancion* datos;
     FILE* archivoCanciones;
     int option;
@@ -106,13 +136,14 @@ void main()
                     break;
             case 2: printf("FUNCION NO IMPLEMENTADA\n");
                     break;
-            case 3: scanf("%s", &nombre);
-                    scanf("%s", &artista);
-                    scanf("%s", &generos);
-                    scanf("%d", &ano);
-                    scanf("%s", &Lista_reproduccion);
-                    revisar_cancion(nombre, artista, generos, ano, Lista_reproduccion, datos);
-                    agregar_cancion( nombre, artista,  generos, ano,  Lista_reproduccion);
+            case 3: scanf("%s", nombre); //FALTAN HACER PRINTF PARA VER QUE DATO TENEMOS QUE INGRESAR, CON TODOS 
+                    scanf("%s", artista); //FALTA HACER UN PRINTF EN AGREGAR CANCION SI ES QUE YA ESTA EN UNA LISTA O SI HAY QUE CREAR UNA LISTA ETC
+                    //scanf("%s", generos);
+                    scanf("%d", &anyo);
+                    scanf("%s", Lista_reproduccion);
+                    agregarCancion(nombre, artista, generos, anyo, Lista_reproduccion);
+                    //revisar_cancion(nombre, artista, generos, ano, Lista_reproduccion, datos);
+                    //agregar_cancion( nombre, artista,  generos, ano,  Lista_reproduccion);
                     break;
             case 4: printf("FUNCION NO IMPLEMENTADA\n");
                     break;
