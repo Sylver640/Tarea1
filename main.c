@@ -5,11 +5,15 @@
 #include <stdbool.h>
 #include "list.h"
 
+//crear lista de listas, global para que sea fácil de acceder desde distintas funciones (base de datos)
+List* listaDeListas = NULL;
+
 typedef struct{
     char nombreC[30];
     int year;
     char artista[15];
-    List* generos; //puede ser char**
+    char** generos; //por las funciones que debemos implementar debería ser char**
+    char* Lista_reproduccion; //faltaba esta variable para agregar canciones
     ListaCanciones* listaC; //quizás no sea necesario esto 
 } tipoCancion;
 
@@ -58,6 +62,41 @@ void agregar_cancion((char nombre, char* artista, char generos, int ano, char* L
 
 }
 
+void agregarCancion (char* nombre, char* artista, char** géneros, int año, char* Lista_reproduccion)
+{
+        List* listaDeReproduccion = NULL;
+        //inicializar la lista de istas si no se ha ocupado antes
+        if (listaDeListas == NULL)
+        {
+                listaDeListas = createList();
+        }
+        //buscar la lista especificada para ver si existe
+        listaDeReproduccion = firstList(listaDeListas);
+
+        //vemos el primer elemento de lista de la canción y ver si el elemento corresponde
+        while (listaDeReproduccion != NULL)
+        {
+                //crear variable de tipo canción para poder usar strcmp
+                tipoCancion* primeraCancion = firstList(listaDeReproduccion); 
+                if (strcmp(primeraCancion->Lista_reproduccion, Lista_reproduccion) == 0)
+                {
+                        break; //encontramos que la lista ya existe
+                }
+                else 
+                {
+                        //pasar a la siguiente lista de reproducción
+                }
+        }
+        //si la lista no existe, crearla
+        if (listaDeReproduccion == NULL)
+        {
+                listaDeReproduccion = createList();
+                //agregarla  a la lista de listas
+
+        } 
+
+}
+
 void main()
 {
     char nombre, artista, generos, Lista_reproduccion;
@@ -88,7 +127,7 @@ void main()
         {
             case 1: printf("\nIngrese el nombre del archivo: ");
                     scanf("%s", &archivo);
-                    archivoCanciones = importCancion(archivo);
+                    //archivoCanciones = importCancion(archivo);
                     break;
             case 2: printf("FUNCION NO IMPLEMENTADA\n");
                     break;
