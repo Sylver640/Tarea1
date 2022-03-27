@@ -36,34 +36,7 @@ FILE* importCancion(char* nombre_archivo){
 
 }
 
-//ESTO ESTÁ COMENTADO PORQUE TIENE PROBLEMAS PARA COMPILAR CUANDO LO IMPORTÉ, SI QUIEREN DSP PODEMOS VER CUAL DE LAS DOS FUNCIONES DEJAMOS
-/*bool revisar_cancion(char *nombre,char * artista, char generos, int *ano,char * Lista_reproduccion, tipoCancion datos)
-{
-       void buscador;
-       buscador = datos->listaC.head;
-       while(buscador != NULL && buscador.data!=Lista_reproduccion)
-       {
-           buscador=buscador->next;
-       }|
-       if(buscador==NULL)
-       {
-          datos->listaC = createList();
-       }
-
-}
-
-void agregar_cancion((char nombre, char* artista, char generos, int ano, char* Lista_reproducción)
-{
-
-        tipoCancion *ingresar;
-        strcpy(nombre,ingresar->nombre );
-        strcpy(artista, ingresar->artista );
-        void pushFront( ingresar->generos, * generos);
-        ingresar->year=ano;
-
-}*/
-
-void agregarCancion (char* nombre, char* artista, char** géneros, int año, char* Lista_reproduccion)
+void agregarCancion (char* nombre, char* artista, char** géneros, int anyo, char* Lista_reproduccion) //No se puede usar la ñ en C para la variable "año", por lo que se cambiará a "anyo"
 {
         List* listaDeReproduccion = NULL;
         //inicializar la lista de istas si no se ha ocupado antes
