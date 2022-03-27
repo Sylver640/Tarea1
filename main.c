@@ -30,6 +30,7 @@ void importCancion(char* nombre_archivo){
 void main()
 {
     int option;
+    char* archivo;
 
     while (option != 11)
     {
@@ -50,7 +51,9 @@ void main()
 
         switch(option)
         {
-            case 1: printf("FUNCION NO IMPLEMENTADA\n");
+            case 1: printf("\nIngrese el nombre del archivo: ");
+                    scanf("%c", &archivo);
+                    importCancion(archivo);
                     break;
             case 2: printf("FUNCION NO IMPLEMENTADA\n");
                     break;
