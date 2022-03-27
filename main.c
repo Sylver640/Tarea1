@@ -24,7 +24,7 @@ void main()
     FILE *archivoCanciones = fopen("Canciones.csv", "rw");
     int option;
 
-    while (option != 8)
+    while (option != 11)
     {
         printf("1. Importar canciones desde el archivo\n");
         printf("2. Exportar canciones (CSV)\n");
@@ -33,7 +33,10 @@ void main()
         printf("5. Buscar cancion por artista\n");
         printf("6. Buscar cancion por genero\n");
         printf("7. Eliminar cancion\n");
-        printf("8. Salir\n");
+        printf("8. Mostrar nombres de las listas de reproduccion\n");
+        printf("9. Mostrar una lista de reproduccion\n");
+        printf("10. Mostrar todas las canciones\n");
+        printf("11. Salir");
 
         printf("Indique la opcion: ");
         scanf("%i", &option);
@@ -54,7 +57,13 @@ void main()
                     break;
             case 7: printf("FUNCION NO IMPLEMENTADA\n");
                     break;
-            case 8: break;
+            case 8: printf("FUNCION NO IMPLEMENTADA\n");
+                    break;
+            case 9: printf("FUNCION NO IMPLEMENTADA\n");
+                    break;
+            case 10: printf("FUNCION NO IMPLEMENTADA\n");
+                     break;
+            case 11: break;
         }
     }
     return;
