@@ -7,7 +7,7 @@
 
 //crear lista de listas, global para que sea fácil de acceder desde distintas funciones (base de datos)
 List* listaDeListas = NULL;
-List* listaDeCanciones = NULL;
+//List* listaDeCanciones = NULL;
 
 typedef struct{
     char nombreC[30];
@@ -33,6 +33,37 @@ void importCancion(char* nombre_archivo){
         return;
     }
     fclose(archivoCanciones);
+}
+
+void buscarCancionNombre (char* nombre)
+{
+        //bool para ver si se encontró alguna canción con el nombre ingresado
+        bool encontrado = false;
+
+        //primero iterar por cada lista de reproducción
+        List* listaDeReproduccion = firstList(listaDeListas);
+        while (listaDeReproduccion != NULL)
+        {
+                //iterar canción por canción
+                tipoCancion* cancion = firstList(listaDeReproduccion);
+                while (cancion != NULL)
+                {
+                        if (strcmp(cancion->nombreC, nombre) == 0)
+                        {
+                                //se encontró una canción con ese nombre
+                                printf("%s\n", cancion->nombreC);
+                                printf("%s\n", cancion->artista);
+                                printf("%s\n", cancion->generos);
+                                printf("%s\n", cancion->year);
+                                printf("%s\n", cancion->Lista_reproduccion);
+                                encontrado = true;
+                        }
+                }
+        }
+        if (encontrado == false)
+        {
+                printf("No se ha encontrado ninguna canción con el nombre ingresado.");
+        }
 }
 
 void agregarCancion (char* nombre, char* artista, char* generos, int anyo, char* Lista_reproduccion) 
@@ -97,7 +128,8 @@ void agregarCancion (char* nombre, char* artista, char* generos, int anyo, char*
 
         //agregar canción a lista de listas y a la lista de canciones
         pushBack(listaDeReproduccion, cancionActual);
-        pushBack(listaDeCanciones, cancionActual);
+        printf("Su cancion fue agregada.\n");
+        //pushBack(listaDeCanciones, cancionActual);
 }
 
 /*void buscar_cancion(char nombre)
@@ -137,13 +169,13 @@ void agregarCancion (char* nombre, char* artista, char* generos, int anyo, char*
 void main()
 {
     char nombre[100], artista[100], Lista_reproduccion[100];
-    char generos[100];
+    char generos[100]; //aca no debería ser char* ?
     int anyo;
     tipoCancion* datos;
     FILE* archivoCanciones;
     int option;
     char archivo[100];
-    listaDeCanciones = createList();
+    //listaDeCanciones = createList();
 
     while (option != 11)
     {
@@ -175,7 +207,7 @@ void main()
                     scanf("%[^\n]s", nombre); //PROBLEMA
                     getchar();
                     printf("Ingrese el artista de la cancion: ");
-                    scanf("%[^\n]s", artista); //FALTA HACER UN PRINTF EN AGREGAR CANCION SI ES QUE YA ESTA EN UNA LISTA O SI HAY QUE CREAR UNA LISTA ETC
+                    scanf("%[^\n]s", artista); 
                     getchar();
                     printf("Ingrese el genero de la cancion: "); 
                     scanf("%[^\n]s", generos); ////PROBLEMA
