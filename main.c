@@ -25,13 +25,14 @@ typedef struct{
 
 void importCancion(char* nombre_archivo){
 
-    FILE *archivoCanciones = fopen(nombre_archivo, "rt");
+    FILE *archivoCanciones = fopen(nombre_archivo, "rt"); //Se busca y abre el archivo indicado por el usuario.
     if (archivoCanciones == NULL)
     {
+        //Si no se haya el archivo, se avisa al usuario y se regresa al menú.    
         printf("Archivo no encontrado!");
         return;
     }
-    fclose(archivoCanciones);
+    fclose(archivoCanciones); //Se importan las canciones y se cierra el archivo.
 }
 
 void buscarCancionNombre (char* nombre)
