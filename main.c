@@ -53,11 +53,13 @@ void buscarCancionNombre (char* nombre)
                                 printf("%s\n", cancion->nombreC);
                                 printf("%s\n", cancion->artista);
                                 printf("%s\n", cancion->generos);
-                                printf("%s\n", cancion->year);
+                                printf("%i\n", cancion->year);
                                 printf("%s\n", cancion->Lista_reproduccion);
                                 encontrado = true;
                         }
+                        cancion = nextList(listaDeReproduccion);
                 }
+                listaDeReproduccion = nextList(listaDeListas);
         }
         if (encontrado == false)
         {
@@ -84,11 +86,13 @@ void buscarCancionArtista (char* artista)
                                 printf("%s\n", cancion->nombreC);
                                 printf("%s\n", cancion->artista);
                                 printf("%s\n", cancion->generos);
-                                printf("%s\n", cancion->year);
+                                printf("%i\n", cancion->year);
                                 printf("%s\n", cancion->Lista_reproduccion);
                                 encontrado = true;
                         }
+                        cancion = nextList(listaDeReproduccion);
                 }
+                listaDeReproduccion = nextList(listaDeListas);
         }
         if (encontrado == false)
         {
@@ -115,11 +119,13 @@ void buscarCancionGenero (char* genero)
                                 printf("%s\n", cancion->nombreC);
                                 printf("%s\n", cancion->artista);
                                 printf("%s\n", cancion->generos);
-                                printf("%s\n", cancion->year);
+                                printf("%i\n", cancion->year);
                                 printf("%s\n", cancion->Lista_reproduccion);
                                 encontrado = true;
                         }
+                        cancion = nextList(listaDeReproduccion);
                 }
+                listaDeReproduccion = nextList(listaDeListas);
         }
         if (encontrado == false)
         {
@@ -230,33 +236,34 @@ void main()
                     break;
             case 3: printf("Ingrese el nombre de la cancion: ");
                     getchar();
-                    scanf("%[^\n]s", nombre); //PROBLEMA
+                    scanf("%[^\n]s", nombre);
                     getchar();
                     printf("Ingrese el artista de la cancion: ");
                     scanf("%[^\n]s", artista); 
                     getchar();
                     printf("Ingrese el genero de la cancion: "); 
-                    scanf("%[^\n]s", generos); ////PROBLEMA
+                    scanf("%[^\n]s", generos);
                     getchar();
                     printf("Ingrese el año de la cancion: ");
                     scanf("%d", &anyo);
                     getchar();
                     printf("Ingrese la lista de reproduccion en donde quiere agregar la cancion: ");
                     scanf("%[^\n]s", Lista_reproduccion);
+                    getchar();
                     agregarCancion(nombre, artista, generos, anyo, Lista_reproduccion);
                     break;
             case 4: printf("Ingrese el nombre de la cancion que desea buscar\n");
-                    scanf("%[^\n]s", nombre);
+                    scanf("%s", nombre);
                     getchar();
                     buscarCancionNombre(nombre);
                     break;
             case 5: printf("Ingrese el artista de la cancion que desea buscar\n");
-                    scanf("%[^\n]s", artista);
+                    scanf("%s", artista);
                     getchar();
                     buscarCancionArtista(artista);
                     break;
             case 6: printf("Ingrese el genero de la cancion que desea buscar\n");
-                    scanf("%[^\n]s", generos);
+                    scanf("%s", generos);
                     getchar();
                     buscarCancionGenero(generos);
                     break;
