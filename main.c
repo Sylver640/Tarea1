@@ -66,6 +66,11 @@ void buscarCancionNombre (char* nombre)
         }
 }
 
+void buscarCancionGenero (char* genero)
+{
+        
+}
+
 void agregarCancion (char* nombre, char* artista, char* generos, int anyo, char* Lista_reproduccion) 
 {
         List* listaDeReproduccion = NULL;
