@@ -7,7 +7,6 @@
 
 //crear lista de listas, global para que sea fácil de acceder desde distintas funciones (base de datos)
 List* listaDeListas = NULL;
-//List* listaDeCanciones = NULL;
 
 typedef struct{
     char nombreC[30];
@@ -66,9 +65,66 @@ void buscarCancionNombre (char* nombre)
         }
 }
 
+void buscarCancionArtista (char* artista)
+{
+        //bool para ver si se encontró alguna canción con el artista ingresado
+        bool encontrado = false;
+
+        //primero iterar por cada lista de reproducción
+        List* listaDeReproduccion = firstList(listaDeListas);
+        while (listaDeReproduccion != NULL)
+        {
+                //iterar canción por canción
+                tipoCancion* cancion = firstList(listaDeReproduccion);
+                while (cancion != NULL)
+                {
+                        if (strcmp(cancion->artista, artista) == 0)
+                        {
+                                //se encontró una canción con el artista ingresado
+                                printf("%s\n", cancion->nombreC);
+                                printf("%s\n", cancion->artista);
+                                printf("%s\n", cancion->generos);
+                                printf("%s\n", cancion->year);
+                                printf("%s\n", cancion->Lista_reproduccion);
+                                encontrado = true;
+                        }
+                }
+        }
+        if (encontrado == false)
+        {
+                printf("No se ha encontrado ninguna canción con el artista ingresado.");
+        }
+}
+
 void buscarCancionGenero (char* genero)
 {
-        
+        //bool para ver si se encontró alguna canción con el genero ingresado
+        bool encontrado = false;
+
+        //primero iterar por cada lista de reproducción
+        List* listaDeReproduccion = firstList(listaDeListas);
+        while (listaDeReproduccion != NULL)
+        {
+                //iterar canción por canción
+                tipoCancion* cancion = firstList(listaDeReproduccion);
+                while (cancion != NULL)
+                {
+                        if (strstr(cancion->generos, genero) == 0) //esta funcion tienen que coincidir mayusculas y minusculas, es un problema?
+                        {
+                                //se encontró una canción con ese genero
+                                printf("%s\n", cancion->nombreC);
+                                printf("%s\n", cancion->artista);
+                                printf("%s\n", cancion->generos);
+                                printf("%s\n", cancion->year);
+                                printf("%s\n", cancion->Lista_reproduccion);
+                                encontrado = true;
+                        }
+                }
+        }
+        if (encontrado == false)
+        {
+                printf("No se ha encontrado ninguna canción con el genero ingresado.");
+        }
 }
 
 void agregarCancion (char* nombre, char* artista, char* generos, int anyo, char* Lista_reproduccion) 
@@ -137,40 +193,6 @@ void agregarCancion (char* nombre, char* artista, char* generos, int anyo, char*
         //pushBack(listaDeCanciones, cancionActual);
 }
 
-/*void buscar_cancion(char nombre)
-{
-   List* lista_revisora = createList();
-   bool marcador = false;
-   if( listaDeListas == NULL)
-   {
-        printf("La canción buscada no existe en ninguna lista");
-   }
-   lista_revisora=firstList(listaDeListas);
-   char* revisor;
-   revisor=lista_revisora->head->nombre;
-   while(true)
-   {
-           if(revisor==nombre)
-           {
-                printf("los datos de la cancion");
-                marcador= true;
-           }
-           if(revisor->next != NULL)
-           {
-                revisor=revisor->next->nombre;
-           }
-           else{
-                  lista_revisora=nextList(listaDeListas);
-                  if(lista_revisora==NULL) break;
-                  revisor=lista_revisora->head->nombre;
-             }
-   }
-   if(marcador==false)
-   {
-           printf("no ta la cancion");
-   }
-}*/
-
 void main()
 {
     char nombre[100], artista[100], Lista_reproduccion[100];
@@ -180,7 +202,6 @@ void main()
     FILE* archivoCanciones;
     int option;
     char archivo[100];
-    //listaDeCanciones = createList();
 
     while (option != 11)
     {
@@ -224,13 +245,20 @@ void main()
                     scanf("%[^\n]s", Lista_reproduccion);
                     agregarCancion(nombre, artista, generos, anyo, Lista_reproduccion);
                     break;
-            case 4: printf("Ingrese el nombre de la canción que desea buscar\n");
-                    scanf("%s", &nombre);
-                    //buscar_cancion(nombre); //FALTA TERMINAR FUNCIÓN 
+            case 4: printf("Ingrese el nombre de la cancion que desea buscar\n");
+                    scanf("%[^\n]s", nombre);
+                    getchar();
+                    buscarCancionNombre(nombre);
                     break;
-            case 5: printf("FUNCION NO IMPLEMENTADA\n");
+            case 5: printf("Ingrese el artista de la cancion que desea buscar\n");
+                    scanf("%[^\n]s", artista);
+                    getchar();
+                    buscarCancionArtista(artista);
                     break;
-            case 6: printf("FUNCION NO IMPLEMENTADA\n");
+            case 6: printf("Ingrese el genero de la cancion que desea buscar\n");
+                    scanf("%[^\n]s", generos);
+                    getchar();
+                    buscarCancionGenero(generos);
                     break;
             case 7: printf("FUNCION NO IMPLEMENTADA\n");
                     break;
