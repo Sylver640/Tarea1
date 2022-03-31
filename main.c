@@ -21,7 +21,7 @@ typedef struct{
     int cantidad;
     List* canciones;
     char nombre[30];
-} ListaCanciones;
+} listaCanciones;
 
 char *get_csv_field (char * tmp, int k) {
     int open_mark = 0;
@@ -90,7 +90,7 @@ void importarCanciones(char* nombre_archivo){
     //FALTA TERMINAR ESTA PARTE. LO ÚNICO QUE HACE ES IMPRIMIR LAS LÍNEAS.
     while (fgets(linea, 1023, archivoCanciones) != NULL)
     {
-        for (i = 0; i < 5; i++)
+        for (i = 0; i < 1; i++)
         {
                 char *aux = get_csv_field(linea, i);
                 printf("%s ", aux);
@@ -174,11 +174,11 @@ void buscarCancionGenero (char* genero)
         bool encontrado = false;
 
         //primero iterar por cada lista de reproducción
-        List* listaDeReproduccion = firstList(listaDeListas);
+        listaCanciones* listaDeReproduccion = firstList(listaDeListas);
         while (listaDeReproduccion != NULL)
         {
                 //iterar canción por canción
-                tipoCancion* cancion = firstList(listaDeReproduccion);
+                tipoCancion* cancion = firstList(listaDeReproduccion->canciones);
                 while (cancion != NULL)
                 {
                         if (strcmp(cancion->generos, genero) == 0) //esta funcion tienen que coincidir mayusculas y minusculas, es un problema?
@@ -203,7 +203,9 @@ void buscarCancionGenero (char* genero)
 
 void agregarCancion (char* nombre, char* artista, char* generos, int anyo, char* Lista_reproduccion) 
 {
-        List* listaDeReproduccion = NULL;
+        listaCanciones* listaDeReproduccion = (listaCanciones*) malloc (sizeof(listaCanciones));
+        strcpy(listaDeReproduccion->nombre, Lista_reproduccion);
+
         //inicializar la lista de listas si no se ha ocupado antes
         if (listaDeListas == NULL)
         {
@@ -213,10 +215,10 @@ void agregarCancion (char* nombre, char* artista, char* generos, int anyo, char*
         listaDeReproduccion = firstList(listaDeListas);
 
         //vemos el primer elemento de lista de la canción y ver si el elemento corresponde
-        while (listaDeReproduccion != NULL)
+        while (listaDeReproduccion->canciones != NULL)
         {
                 //crear variable de tipo canción para poder usar strcmp
-                tipoCancion* primeraCancion = firstList(listaDeReproduccion); 
+                tipoCancion* primeraCancion = firstList(listaDeReproduccion->canciones); 
                 if (strcmp(primeraCancion->Lista_reproduccion, Lista_reproduccion) == 0)
                 {
                         break; //encontramos que la lista ya existe
@@ -228,15 +230,15 @@ void agregarCancion (char* nombre, char* artista, char* generos, int anyo, char*
                 }
         }
         //si la lista no existe, crearla
-        if (listaDeReproduccion == NULL)
+        if (listaDeReproduccion->canciones == NULL)
         {
-                listaDeReproduccion = createList();
+                listaDeReproduccion->canciones = createList();
                 //agregarla  a la lista de listas
                 pushBack(listaDeListas, listaDeReproduccion);
         } 
 
         //validar que la canción no esté ya en la lista de reproducción
-        tipoCancion* cancionActual = firstList(listaDeReproduccion); //primera canción de la lista de reproducción
+        tipoCancion* cancionActual = firstList(listaDeReproduccion->canciones); //primera canción de la lista de reproducción
         while(cancionActual != NULL)
         {
                 //comparar nombre de la canción
@@ -249,7 +251,7 @@ void agregarCancion (char* nombre, char* artista, char* generos, int anyo, char*
                 else
                 {
                         //revisar siguiente canción
-                        cancionActual = nextList(listaDeReproduccion);
+                        cancionActual = nextList(listaDeReproduccion->canciones);
                 }
         }
 
@@ -261,8 +263,11 @@ void agregarCancion (char* nombre, char* artista, char* generos, int anyo, char*
         cancionActual->year = anyo;
         cancionActual->Lista_reproduccion = Lista_reproduccion;
 
+        //Aumenta el número de canciones que tiene la lista
+        listaDeReproduccion->cantidad++;
+
         //agregar canción a lista de listas y a la lista de canciones
-        pushBack(listaDeReproduccion, cancionActual);
+        pushBack(listaDeReproduccion->canciones, cancionActual);
         printf("Su cancion fue agregada.\n");
         //pushBack(listaDeCanciones, cancionActual);
 }
