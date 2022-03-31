@@ -68,40 +68,6 @@ void exportarCanciones (char* nombre_archivo)
         return;
 }
 
-void importarCanciones(char* nombre_archivo){
-
-    FILE *archivoCanciones = fopen(nombre_archivo, "rt"); //Se busca y abre el archivo indicado por el usuario.
-    if (archivoCanciones == NULL)
-    {
-        //Si no se haya el archivo, se avisa al usuario y se regresa al menú.    
-        printf("\nArchivo no encontrado!\n");
-        return;
-    }
-    else
-    {
-        printf("\nSu archivo fue abierto correctamente!\n");
-    }
-    
-    //Se inicializan variables a utilizar en la funcion get_csv_field
-    char linea[1024];
-    int i;
-    int k = 0;
-    //Para este while, se empieza desde la primera línea del archivo, hasta que llegue al final.
-    //FALTA TERMINAR ESTA PARTE. LO ÚNICO QUE HACE ES IMPRIMIR LAS LÍNEAS.
-    while (fgets(linea, 1023, archivoCanciones) != NULL)
-    {
-        for (i = 0; i < 1; i++)
-        {
-                char *aux = get_csv_field(linea, i);
-                printf("%s ", aux);
-        }
-        printf("\n");
-        k++;
-    }
-
-    fclose(archivoCanciones); //Se importan las canciones y se cierra el archivo.
-}
-
 void buscarCancionNombre (char* nombre)
 {
         //bool para ver si se encontró alguna canción con el nombre ingresado
@@ -201,7 +167,7 @@ void buscarCancionGenero (char* genero)
         }
 }
 
-void agregarCancion (char nombre[], char artista[], char generos[], int anyo, char Lista_reproduccion[]) 
+void agregarCancion (char nombre[], char artista[], char generos[], int anyo, char Lista_reproduccion[], List* listaGlobal) 
 {
         listaCanciones* listaDeReproduccion;
         tipoCancion * cancionActual = (tipoCancion*)malloc(sizeof(tipoCancion));
@@ -280,7 +246,44 @@ void agregarCancion (char nombre[], char artista[], char generos[], int anyo, ch
         //agregar canción a lista de listas y a la lista de canciones
         pushBack(listaDeReproduccion->canciones, cancionActual);
         printf("Su cancion fue agregada.\n");
-        //pushBack(listaDeCanciones, cancionActual);
+        pushBack(listaGlobal, cancionActual);
+}
+
+void importarCanciones(char* nombre_archivo){
+
+    FILE *archivoCanciones = fopen(nombre_archivo, "rt"); //Se busca y abre el archivo indicado por el usuario.
+    if (archivoCanciones == NULL)
+    {
+        //Si no se haya el archivo, se avisa al usuario y se regresa al menú.    
+        printf("\nArchivo no encontrado!\n");
+        return;
+    }
+    else
+    {
+        printf("\nSu archivo fue abierto correctamente!\n");
+    }
+    
+    //Se inicializan variables a utilizar en la funcion get_csv_field
+    char linea[1024];
+    int i;
+    int k = 0;
+    //Para este while, se empieza desde la primera línea del archivo, hasta que llegue al final.
+    //FALTA TERMINAR ESTA PARTE. LO ÚNICO QUE HACE ES IMPRIMIR LAS LÍNEAS.
+    while (fgets(linea, 1023, archivoCanciones) != NULL)
+    {
+        for (i = 0; i < 1; i++)
+        {
+                char *nombre = get_csv_field(linea, i);
+                char *artista = get_csv_field(linea, i+1);
+                char *generos = get_csv_field(linea, i+2);
+                char *anyo = get_csv_field(linea, i+3);
+                char *lista = get_csv_field(linea, i+4);
+                printf("%s\n", lista);
+        }
+        k++;
+    }
+
+    fclose(archivoCanciones); //Se importan las canciones y se cierra el archivo.
 }
 
 void mostrarListasRep(List* listaDeListas){
@@ -302,6 +305,7 @@ void mostrarListasRep(List* listaDeListas){
 
 void main()
 {
+    List* listaGlobal = createList();
     char nombre[100], artista[100], Lista_reproduccion[100];
     char generos[100]; //aca no debería ser char* ?
     int anyo;
@@ -353,7 +357,7 @@ void main()
                     printf("Ingrese la lista de reproduccion en donde quiere agregar la cancion: ");
                     scanf("%[^\n]s", Lista_reproduccion);
                     getchar();
-                    agregarCancion(nombre, artista, generos, anyo, Lista_reproduccion);
+                    agregarCancion(nombre, artista, generos, anyo, Lista_reproduccion, listaGlobal);
                     break;
             case 4: printf("Ingrese el nombre de la cancion que desea buscar\n");
                     getchar();
@@ -383,7 +387,7 @@ void main()
                      break;
             case 0: break;
         }
-        printf("\n\n");
+        printf("\n");
     }
     return;
 }
