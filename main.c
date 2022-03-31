@@ -23,6 +23,51 @@ typedef struct{
     char nombre[30];
 } ListaCanciones;
 
+char *get_csv_field (char * tmp, int k) {
+    int open_mark = 0;
+    char* ret=(char*) malloc (100*sizeof(char));
+    int ini_i=0, i=0;
+    int j=0;
+    while(tmp[i+1]!='\0'){
+
+        if(tmp[i]== '\"'){
+            open_mark = 1-open_mark;
+            if(open_mark) ini_i = i+1;
+            i++;
+            continue;
+        }
+
+        if(open_mark || tmp[i]!= ','){
+            if(k==j) ret[i-ini_i] = tmp[i];
+            i++;
+            continue;
+        }
+
+        if(tmp[i]== ','){
+            if(k==j) {
+               ret[i-ini_i] = 0;
+               return ret;
+            }
+            j++; ini_i = i+1;
+        }
+
+        i++;
+    }
+
+    if(k==j) {
+       ret[i-ini_i] = 0;
+       return ret;
+    }
+
+    return NULL;
+}
+
+void exportarCanciones (char* nombre_archivo)
+{
+        FILE *archivoCanciones = fopen(nombre_archivo, "wt");
+        return;
+}
+
 void importarCanciones(char* nombre_archivo){
 
     FILE *archivoCanciones = fopen(nombre_archivo, "rt"); //Se busca y abre el archivo indicado por el usuario.
@@ -34,8 +79,26 @@ void importarCanciones(char* nombre_archivo){
     }
     else
     {
-        printf("Su archivo fue abierto correctamente!");
+        printf("\nSu archivo fue abierto correctamente!\n");
     }
+    
+    //Se inicializan variables a utilizar en la funcion get_csv_field
+    char linea[1024];
+    int i;
+    int k = 0;
+    //Para este while, se empieza desde la primera línea del archivo, hasta que llegue al final.
+    //FALTA TERMINAR ESTA PARTE. LO ÚNICO QUE HACE ES IMPRIMIR LAS LÍNEAS.
+    while (fgets(linea, 1023, archivoCanciones) != NULL)
+    {
+        for (i = 0; i < 5; i++)
+        {
+                char *aux = get_csv_field(linea, i);
+                printf("%s ", aux);
+        }
+        printf("\n");
+        k++;
+    }
+
     fclose(archivoCanciones); //Se importan las canciones y se cierra el archivo.
 }
 
@@ -55,11 +118,11 @@ void buscarCancionNombre (char* nombre)
                         if (strcmp(cancion->nombreC, nombre) == 0)
                         {
                                 //se encontró una canción con ese nombre
-                                printf("%s\n", cancion->nombreC);
-                                printf("%s\n", cancion->artista);
-                                printf("%s\n", cancion->generos);
-                                printf("%i\n", cancion->year);
-                                printf("%s\n", cancion->Lista_reproduccion);
+                                printf("Nombre: %s\n", cancion->nombreC);
+                                printf("Artista: %s\n", cancion->artista);
+                                printf("Genero(s): %s\n", cancion->generos);
+                                printf("Año: %i\n", cancion->year);
+                                printf("Lista de reproduccion: %s\n", cancion->Lista_reproduccion);
                                 encontrado = true;
                         }
                         cancion = nextList(listaDeReproduccion);
@@ -88,11 +151,11 @@ void buscarCancionArtista (char* artista)
                         if (strcmp(cancion->artista, artista) == 0)
                         {
                                 //se encontró una canción con el artista ingresado
-                                printf("%s\n", cancion->nombreC);
-                                printf("%s\n", cancion->artista);
-                                printf("%s\n", cancion->generos);
-                                printf("%i\n", cancion->year);
-                                printf("%s\n", cancion->Lista_reproduccion);
+                                printf("Nombre: %s\n", cancion->nombreC);
+                                printf("Artista: %s\n", cancion->artista);
+                                printf("Genero(s): %s\n", cancion->generos);
+                                printf("Año: %i\n", cancion->year);
+                                printf("Lista de reproduccion: %s\n", cancion->Lista_reproduccion);
                                 encontrado = true;
                         }
                         cancion = nextList(listaDeReproduccion);
@@ -118,14 +181,14 @@ void buscarCancionGenero (char* genero)
                 tipoCancion* cancion = firstList(listaDeReproduccion);
                 while (cancion != NULL)
                 {
-                        if (strstr(cancion->generos, genero) == 0) //esta funcion tienen que coincidir mayusculas y minusculas, es un problema?
+                        if (strcmp(cancion->generos, genero) == 0) //esta funcion tienen que coincidir mayusculas y minusculas, es un problema?
                         {
                                 //se encontró una canción con ese genero
-                                printf("%s\n", cancion->nombreC);
-                                printf("%s\n", cancion->artista);
-                                printf("%s\n", cancion->generos);
-                                printf("%i\n", cancion->year);
-                                printf("%s\n", cancion->Lista_reproduccion);
+                                printf("Nombre: %s\n", cancion->nombreC);
+                                printf("Artista: %s\n", cancion->artista);
+                                printf("Genero(s): %s\n", cancion->generos);
+                                printf("Año: %i\n", cancion->year);
+                                printf("Lista de reproduccion: %s\n", cancion->Lista_reproduccion);
                                 encontrado = true;
                         }
                         cancion = nextList(listaDeReproduccion);
@@ -214,7 +277,7 @@ void main()
     int option;
     char archivo[100];
 
-    while (option != 11)
+    while (option != 0)
     {
         printf("1. Importar canciones desde el archivo\n");
         printf("2. Exportar canciones (CSV)\n");
@@ -226,7 +289,7 @@ void main()
         printf("8. Mostrar nombres de las listas de reproduccion\n");
         printf("9. Mostrar una lista de reproduccion\n");
         printf("10. Mostrar todas las canciones\n");
-        printf("11. Salir\n");
+        printf("0. Salir\n");
 
         printf("Indique la opcion: ");
         scanf("%i", &option);
@@ -237,7 +300,9 @@ void main()
                     scanf("%s", &archivo);
                     importarCanciones(archivo);
                     break;
-            case 2: printf("FUNCION NO IMPLEMENTADA\n");
+            case 2: printf("\nIngrese el nombre del archivo que desea crear (o sobreescribir): ");
+                    scanf("%s", &archivo);
+                    exportarCanciones(archivo);
                     break;
             case 3: printf("Ingrese el nombre de la cancion: ");
                     getchar();
@@ -258,17 +323,20 @@ void main()
                     agregarCancion(nombre, artista, generos, anyo, Lista_reproduccion);
                     break;
             case 4: printf("Ingrese el nombre de la cancion que desea buscar\n");
-                    scanf("%s", nombre);
+                    getchar();
+                    scanf("%[^\n]s", nombre);
                     getchar();
                     buscarCancionNombre(nombre);
                     break;
             case 5: printf("Ingrese el artista de la cancion que desea buscar\n");
-                    scanf("%s", artista);
+                    getchar();
+                    scanf("%[^\n]s", artista);
                     getchar();
                     buscarCancionArtista(artista);
                     break;
             case 6: printf("Ingrese el genero de la cancion que desea buscar\n");
-                    scanf("%s", generos);
+                    getchar();
+                    scanf("%[^\n]s", generos);
                     getchar();
                     buscarCancionGenero(generos);
                     break;
@@ -280,7 +348,7 @@ void main()
                     break;
             case 10: printf("FUNCION NO IMPLEMENTADA\n");
                      break;
-            case 11: break;
+            case 0: break;
         }
         printf("\n\n");
     }
