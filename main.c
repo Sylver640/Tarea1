@@ -262,6 +262,7 @@ void agregarCancion (char nombre[], char artista[], char generos[], int anyo, ch
         {
                 listaDeReproduccion = (listaCanciones *) malloc (sizeof(listaCanciones));
                 strcpy(listaDeReproduccion->nombre, Lista_reproduccion);
+                listaDeReproduccion->cantidad = 0;
                 listaDeReproduccion->canciones = createList();
                 pushBack(listaDeListas, listaDeReproduccion);
         }
@@ -280,6 +281,23 @@ void agregarCancion (char nombre[], char artista[], char generos[], int anyo, ch
         pushBack(listaDeReproduccion->canciones, cancionActual);
         printf("Su cancion fue agregada.\n");
         //pushBack(listaDeCanciones, cancionActual);
+}
+
+void mostrarListasRep(List* listaDeListas){
+        listaCanciones* aux = firstList(listaDeListas);
+        if(aux == NULL){
+                printf("NO HAY LISTAS CREADAS\n");
+                return;
+        } else{
+                while (aux != NULL)
+                {
+                   if (aux->cantidad == 1)
+                        printf("La lista denominada %s contiene 1 cancion\n", aux->nombre);
+                   else
+                        printf("La lista denominada %s contiene %i canciones\n", aux->nombre, aux->cantidad);
+                   aux = nextList(listaDeListas);
+                }
+        }
 }
 
 void main()
@@ -357,7 +375,7 @@ void main()
                     break;
             case 7: printf("FUNCION NO IMPLEMENTADA\n");
                     break;
-            case 8: printf("FUNCION NO IMPLEMENTADA\n");
+            case 8: mostrarListasRep(listaDeListas);
                     break;
             case 9: printf("FUNCION NO IMPLEMENTADA\n");
                     break;
