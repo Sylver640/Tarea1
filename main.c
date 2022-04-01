@@ -181,42 +181,47 @@ void agregarCancion (char nombre[], char artista[], char generos[], int anyo, ch
         
         //buscar la lista especificada para ver si existe
         listaDeReproduccion = firstList(listaDeListas);
+        
+        while (listaDeReproduccion != NULL)
+        {
+                //tipoCancion* primeraCancion = firstList(listaDeReproduccion->canciones);
+                if (strcmp(listaDeReproduccion->nombre, Lista_reproduccion) == 0)
+                {
+                        printf("Encuentra la lista que existe\n");
+                        break; //encontramos que la lista ya existe
+                }
+                else
+                {
+                        listaDeReproduccion = nextList(listaDeListas);
+                        printf("Pasa a la siguiente posicion\n");
+                }
+        }
 
         //si la lista no existe, crearla
         if (listaDeReproduccion == NULL)
         {
+                printf("Se crea la lista nueva\n");
                 listaDeReproduccion = (listaCanciones*) malloc(sizeof(listaCanciones));
                 strcpy(listaDeReproduccion->nombre, Lista_reproduccion);
                 listaDeReproduccion->cantidad = 0;
                 listaDeReproduccion->canciones = createList();
                 pushBack(listaDeListas, listaDeReproduccion);
+        }
+
+        if (!firstList(listaDeReproduccion->canciones))
+        {
+                pushFront(listaDeReproduccion->canciones, cancionAgregada); //primera canción de la lista de reproducción
+                printf("Se agrega la cancion nueva\n");
         }
         else
         {
-                while (listaDeReproduccion != NULL)
+                cancionAgregada = firstList(listaDeReproduccion->canciones);
+                while(listaDeReproduccion->canciones != NULL)
                 {
-                        tipoCancion* primeraCancion = firstList(listaDeReproduccion->canciones);
-
-                        if (strcmp(primeraCancion->Lista_reproduccion, Lista_reproduccion) == 0)
-                                break; //encontramos que la lista ya existe
-                        else
-                                listaDeReproduccion = nextList(listaDeListas);
-                }
-                listaDeReproduccion = (listaCanciones*) malloc(sizeof(listaCanciones));
-                strcpy(listaDeReproduccion->nombre, Lista_reproduccion);
-                listaDeReproduccion->cantidad = 0;
-                listaDeReproduccion->canciones = createList();
-                pushBack(listaDeListas, listaDeReproduccion);
-        }
-        
-        if (firstList(listaDeReproduccion->canciones) != NULL)
-        {
-                cancionAgregada = firstList(listaDeReproduccion->canciones); //primera canción de la lista de reproducción
-                while(cancionAgregada != NULL)
-                {
+                        printf("Entra al while\n");
                         //comparar nombre de la canción
                         if (strcmp(cancionAgregada->nombreC, nombre) == 0 && strcmp(cancionAgregada->artista, artista) == 0 &&
-                        strcmp(cancionAgregada->generos, generos) == 0 && cancionAgregada->year == anyo)
+                            strcmp(cancionAgregada->generos, generos) == 0 && cancionAgregada->year == anyo)
                         {
                                 //la canción ya está en la lista
                                 printf("LA CANCIÓN YA ESTÁ EN LA LISTA.\n");
@@ -236,12 +241,14 @@ void agregarCancion (char nombre[], char artista[], char generos[], int anyo, ch
         strcpy(cancionAgregada->generos, generos);
         cancionAgregada->year = anyo;     
         strcpy(cancionAgregada->Lista_reproduccion, Lista_reproduccion);
+        printf("Se copian los datos\n");
    
         //Aumenta el número de canciones que tiene la lista
         listaDeReproduccion->cantidad++;
 
         //agregar canción a lista de listas y a la lista de canciones
         pushBack(listaDeReproduccion->canciones, cancionAgregada);
+        printf("Se hace pushback a la lista\n");
         printf("Su cancion fue agregada.\n");
         pushBack(listaGlobal, cancionAgregada);
 }
