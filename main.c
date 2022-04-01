@@ -272,9 +272,10 @@ void importarCanciones(char* nombre_archivo){
                 char *nombre = get_csv_field(linea, i);
                 char *artista = get_csv_field(linea, i+1);
                 char *generos = get_csv_field(linea, i+2);
+                //printf("%s\n", generos);
                 char *anyo = get_csv_field(linea, i+3);
                 char *lista = get_csv_field(linea, i+4);
-                printf("%s\n", lista);
+                //printf("%s\n", lista);
         }
         k++;
     }
