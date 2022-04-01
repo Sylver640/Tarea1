@@ -216,6 +216,7 @@ void agregarCancion (char nombre[], char artista[], char generos[], int anyo, ch
         else
         {
                 cancionAgregada = firstList(listaDeReproduccion->canciones);
+                printf("%s\n", cancionAgregada->nombreC);
                 while(listaDeReproduccion->canciones != NULL)
                 {
                         printf("Entra al while\n");
@@ -231,15 +232,23 @@ void agregarCancion (char nombre[], char artista[], char generos[], int anyo, ch
                         {
                                 //revisar siguiente canción
                                 cancionAgregada = nextList(listaDeReproduccion->canciones);
+                                printf("Avanza en la lista\n");
+                                printf("%s", cancionAgregada->nombreC);
+                                if (!nextList(listaDeReproduccion->canciones))
+                                        break;
                         }
                 }
         }
 
         //la canción no está guardada, hay que agregarla en la lista (junto a todos los datos que trae)
         strcpy(cancionAgregada->nombreC, nombre);
+        printf("Se copia el nombre\n");
         strcpy(cancionAgregada->artista, artista);
+        printf("Se copia el artista\n");
         strcpy(cancionAgregada->generos, generos);
-        cancionAgregada->year = anyo;     
+        printf("Se copia el genero\n");
+        cancionAgregada->year = anyo;
+        printf("Se copia el year\n");     
         strcpy(cancionAgregada->Lista_reproduccion, Lista_reproduccion);
         printf("Se copian los datos\n");
    
