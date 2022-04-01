@@ -68,7 +68,7 @@ void exportarCanciones (char* nombre_archivo)
         return;
 }
 
-bool buscarCancionNombre (char* nombre)
+void buscarCancionNombre (char* nombre)
 {
         //bool para ver si se encontró alguna canción con el nombre ingresado
         bool encontrado = false;
@@ -99,7 +99,6 @@ bool buscarCancionNombre (char* nombre)
         {
                 printf("No se ha encontrado ninguna canción con el nombre ingresado.");
         }
-        return(encontrado);
 }
 
 void buscarCancionArtista (char* artista)
@@ -168,7 +167,7 @@ void buscarCancionGenero (char* genero)
         }
 }
 
-void agregarCancion (char nombre[], char artista[], char generos[], int anyo, char Lista_reproduccion[], List* listaGlobal) 
+void agregarCancion (char *nombre, char *artista, char *generos, int anyo, char *Lista_reproduccion, List* listaGlobal) 
 {
          //inicializar la lista de listas si no se ha ocupado antes
         if (listaDeListas == NULL)
@@ -187,20 +186,17 @@ void agregarCancion (char nombre[], char artista[], char generos[], int anyo, ch
                 //tipoCancion* primeraCancion = firstList(listaDeReproduccion->canciones);
                 if (strcmp(listaDeReproduccion->nombre, Lista_reproduccion) == 0)
                 {
-                        printf("Encuentra la lista que existe\n");
                         break; //encontramos que la lista ya existe
                 }
                 else
                 {
                         listaDeReproduccion = nextList(listaDeListas);
-                        printf("Pasa a la siguiente posicion\n");
                 }
         }
 
         //si la lista no existe, crearla
         if (listaDeReproduccion == NULL)
         {
-                printf("Se crea la lista nueva\n");
                 listaDeReproduccion = (listaCanciones*) malloc(sizeof(listaCanciones));
                 strcpy(listaDeReproduccion->nombre, Lista_reproduccion);
                 listaDeReproduccion->cantidad = 0;
@@ -211,7 +207,6 @@ void agregarCancion (char nombre[], char artista[], char generos[], int anyo, ch
         if (!firstList(listaDeReproduccion->canciones))
         {
                 pushFront(listaDeReproduccion->canciones, cancionAgregada); //primera canción de la lista de reproducción
-                printf("Se agrega la cancion nueva\n");
         }
         else
         {
@@ -219,7 +214,7 @@ void agregarCancion (char nombre[], char artista[], char generos[], int anyo, ch
                 printf("%s\n", cancionAgregada->nombreC);
                 while(listaDeReproduccion->canciones != NULL)
                 {
-                        printf("Entra al while\n");
+
                         //comparar nombre de la canción
                         if (strcmp(cancionAgregada->nombreC, nombre) == 0 && strcmp(cancionAgregada->artista, artista) == 0 &&
                             strcmp(cancionAgregada->generos, generos) == 0 && cancionAgregada->year == anyo)
@@ -232,8 +227,7 @@ void agregarCancion (char nombre[], char artista[], char generos[], int anyo, ch
                         {
                                 //revisar siguiente canción
                                 cancionAgregada = nextList(listaDeReproduccion->canciones);
-                                printf("Avanza en la lista\n");
-                                printf("%s", cancionAgregada->nombreC);
+                                printf("%s\n", cancionAgregada->nombreC);
                                 if (!nextList(listaDeReproduccion->canciones))
                                         break;
                         }
@@ -242,27 +236,21 @@ void agregarCancion (char nombre[], char artista[], char generos[], int anyo, ch
 
         //la canción no está guardada, hay que agregarla en la lista (junto a todos los datos que trae)
         strcpy(cancionAgregada->nombreC, nombre);
-        printf("Se copia el nombre\n");
         strcpy(cancionAgregada->artista, artista);
-        printf("Se copia el artista\n");
         strcpy(cancionAgregada->generos, generos);
-        printf("Se copia el genero\n");
         cancionAgregada->year = anyo;
-        printf("Se copia el year\n");     
         strcpy(cancionAgregada->Lista_reproduccion, Lista_reproduccion);
-        printf("Se copian los datos\n");
    
         //Aumenta el número de canciones que tiene la lista
         listaDeReproduccion->cantidad++;
 
         //agregar canción a lista de listas y a la lista de canciones
         pushBack(listaDeReproduccion->canciones, cancionAgregada);
-        printf("Se hace pushback a la lista\n");
         printf("Su cancion fue agregada.\n");
         pushBack(listaGlobal, cancionAgregada);
 }
 
-void importarCanciones(char* nombre_archivo){
+void importarCanciones(char* nombre_archivo, List* listaGlobal){
 
     FILE *archivoCanciones = fopen(nombre_archivo, "rt"); //Se busca y abre el archivo indicado por el usuario.
     if (archivoCanciones == NULL)
@@ -289,10 +277,10 @@ void importarCanciones(char* nombre_archivo){
                 char *nombre = get_csv_field(linea, i);
                 char *artista = get_csv_field(linea, i+1);
                 char *generos = get_csv_field(linea, i+2);
-                printf("%s\n", generos);
                 char *anyo = get_csv_field(linea, i+3);
+                int anyoAEntero = atoi(anyo);
                 char *lista = get_csv_field(linea, i+4);
-                printf("%s\n", lista);
+                agregarCancion(nombre, artista, generos, anyoAEntero, lista, listaGlobal);
         }
         k++;
     }
@@ -329,26 +317,29 @@ void eliminar_cancion(char* nombre, char* artista, int anyo)
                         if (strcmp(cancion->artista, artista) == 0 && strcmp(cancion->nombreC, nombre) == 0 && cancion->year == anyo)
                         {
                               popCurrent(listaDeReproduccion->canciones);
-                              break;
+                              printf("Cancion eliminada correctamente\n");
+                              return;
                         }
                         cancion = nextList(listaDeReproduccion->canciones);
                 }
                 listaDeReproduccion = nextList(listaDeListas);
         }
-        printf("no existen canciones de el año ingresado");
+    printf("No existe ninguna cancion que coincida con los datos ingresados.\n");
 }
 
 
 void main()
 {
     List* listaGlobal = createList();
-    char nombre[100], artista[100], Lista_reproduccion[100];
-    char generos[100]; //aca no debería ser char* ?
+    char* nombre = (char*) malloc (100*sizeof(char)); 
+    char* artista = (char*) malloc (100*sizeof(char));
+    char* Lista_reproduccion = (char*) malloc (100*sizeof(char));
+    char* generos = (char*) malloc (100*sizeof(char)); //aca no debería ser char* ?
     int anyo;
     tipoCancion* datos;
     FILE* archivoCanciones;
     int option;
-    char archivo[100];
+    char archivo[101];
     bool existe_cancion;
 
     while (option != 0)
@@ -372,7 +363,7 @@ void main()
         {
             case 1: printf("\nIngrese el nombre del archivo: ");
                     scanf("%s", &archivo);
-                    importarCanciones(archivo);
+                    importarCanciones(archivo, listaGlobal);
                     break;
             case 2: printf("\nIngrese el nombre del archivo que desea crear (o sobreescribir): ");
                     scanf("%s", &archivo);
@@ -380,19 +371,19 @@ void main()
                     break;
             case 3: printf("Ingrese el nombre de la cancion: ");
                     getchar();
-                    scanf("%[^\n]s", nombre);
+                    scanf("%100[^\n]s", nombre);
                     getchar();
                     printf("Ingrese el artista de la cancion: ");
-                    scanf("%[^\n]s", artista); 
+                    scanf("%100[^\n]s", artista); 
                     getchar();
                     printf("Ingrese el genero de la cancion: "); 
-                    scanf("%[^\n]s", generos);
+                    scanf("%100[^\n]s", generos);
                     getchar();
                     printf("Ingrese el año de la cancion: ");
                     scanf("%d", &anyo);
                     getchar();
                     printf("Ingrese la lista de reproduccion en donde quiere agregar la cancion: ");
-                    scanf("%[^\n]s", Lista_reproduccion);
+                    scanf("%100[^\n]s", Lista_reproduccion);
                     getchar();
                     agregarCancion(nombre, artista, generos, anyo, Lista_reproduccion, listaGlobal);
                     break;
@@ -424,18 +415,6 @@ void main()
                     printf("Ingrese el año de la cancion: ");
                     scanf("%d", &anyo);
                     getchar();
-                    existe_cancion = buscarCancionNombre(nombre);
-                    if(existe_cancion==false) 
-                    {
-                       printf("No existe ninguna canción con ese nombre");
-                       break;
-                    } 
-                    existe_cancion = buscarCancionNombre(artista);
-                    if(existe_cancion==false)
-                    {
-                       printf("No existe ninguna canción de ese artista");
-                       break;
-                    } 
                     eliminar_cancion(nombre, artista, anyo);
                     break;
             case 8: mostrarListasRep(listaDeListas);
