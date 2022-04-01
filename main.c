@@ -68,7 +68,7 @@ void exportarCanciones (char* nombre_archivo)
         return;
 }
 
-void buscarCancionNombre (char* nombre)
+bool buscarCancionNombre (char* nombre)
 {
         //bool para ver si se encontró alguna canción con el nombre ingresado
         bool encontrado = false;
@@ -99,6 +99,7 @@ void buscarCancionNombre (char* nombre)
         {
                 printf("No se ha encontrado ninguna canción con el nombre ingresado.");
         }
+        return(encontrado);
 }
 
 void buscarCancionArtista (char* artista)
@@ -272,10 +273,10 @@ void importarCanciones(char* nombre_archivo){
                 char *nombre = get_csv_field(linea, i);
                 char *artista = get_csv_field(linea, i+1);
                 char *generos = get_csv_field(linea, i+2);
-                //printf("%s\n", generos);
+                printf("%s\n", generos);
                 char *anyo = get_csv_field(linea, i+3);
                 char *lista = get_csv_field(linea, i+4);
-                //printf("%s\n", lista);
+                printf("%s\n", lista);
         }
         k++;
     }
@@ -300,6 +301,28 @@ void mostrarListasRep(List* listaDeListas){
         }
 }
 
+void eliminar_cancion(char* nombre, char* artista, int anyo)
+{
+   listaCanciones* listaDeReproduccion = firstList(listaDeListas);
+     while (listaDeReproduccion != NULL)
+        {
+                //iterar canción por canción
+                tipoCancion* cancion = firstList(listaDeReproduccion->canciones);
+                while (cancion != NULL)
+                {
+                        if (strcmp(cancion->artista, artista) == 0 && strcmp(cancion->nombreC, nombre) == 0 && cancion->year == anyo)
+                        {
+                              popCurrent(listaDeReproduccion->canciones);
+                              break;
+                        }
+                        cancion = nextList(listaDeReproduccion->canciones);
+                }
+                listaDeReproduccion = nextList(listaDeListas);
+        }
+        printf("no existen canciones de el año ingresado");
+}
+
+
 void main()
 {
     List* listaGlobal = createList();
@@ -310,6 +333,7 @@ void main()
     FILE* archivoCanciones;
     int option;
     char archivo[100];
+    bool existe_cancion;
 
     while (option != 0)
     {
@@ -374,7 +398,29 @@ void main()
                     getchar();
                     buscarCancionGenero(generos);
                     break;
-            case 7: printf("FUNCION NO IMPLEMENTADA\n");
+            case 7: printf("Ingrese el nombre de la canción a eliminar\n");
+                    getchar();
+                    scanf("%[^\n]s", nombre);
+                    getchar();
+                    printf("Ingrese el/la artista de la cancion: ");
+                    scanf("%[^\n]s", artista); 
+                    getchar();
+                    printf("Ingrese el año de la cancion: ");
+                    scanf("%d", &anyo);
+                    getchar();
+                    existe_cancion = buscarCancionNombre(nombre);
+                    if(existe_cancion==false) 
+                    {
+                       printf("No existe ninguna canción con ese nombre");
+                       break;
+                    } 
+                    existe_cancion = buscarCancionNombre(artista);
+                    if(existe_cancion==false)
+                    {
+                       printf("No existe ninguna canción de ese artista");
+                       break;
+                    } 
+                    eliminar_cancion(nombre, artista, anyo);
                     break;
             case 8: mostrarListasRep(listaDeListas);
                     break;
