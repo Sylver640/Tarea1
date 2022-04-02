@@ -184,54 +184,57 @@ void agregarCancion (char *nombre, char *artista, char *generos, int anyo, char 
         tipoCancion* cancionAgregada = (tipoCancion*)malloc(sizeof(tipoCancion));
         tipoCancion* cancionAuxiliar; //esta variable nos servirá para comprobar los datos
 
-        //Se copian todos los datos 
+        //Se copian todos los datos dados por el usuario a canciónAgregada
         strcpy(cancionAgregada->nombreC, nombre);
         strcpy(cancionAgregada->artista, artista);
         strcpy(cancionAgregada->generos, generos);
         cancionAgregada->year = anyo;
         strcpy(cancionAgregada->Lista_reproduccion, Lista_reproduccion);
         
-        //buscar la lista especificada para ver si existe
+        //Para comenzar a buscar, nos ubicamos al inicio de la lista de listas.
         listaDeReproduccion = firstList(listaDeListas);
         
         while (listaDeReproduccion != NULL)
         {
-                //tipoCancion* primeraCancion = firstList(listaDeReproduccion->canciones);
                 if (strcmp(listaDeReproduccion->nombre, Lista_reproduccion) == 0)
                 {
-                        break; //encontramos que la lista ya existe
+                        break; //al ver que los nombres son iguales, encontramos que la lista ya existe y termina el while
                 }
                 else
                 {
-                        listaDeReproduccion = nextList(listaDeListas);
+                        listaDeReproduccion = nextList(listaDeListas); //si no, se pasa a la siguiente posición
                 }
         }
 
-        //si la lista no existe, crearla
+        //si la lista no existe, se crea
         if (listaDeReproduccion == NULL)
         {
                 listaDeReproduccion = (listaCanciones*) malloc(sizeof(listaCanciones));
                 strcpy(listaDeReproduccion->nombre, Lista_reproduccion);
-                listaDeReproduccion->cantidad = 0;
+                listaDeReproduccion->cantidad = 0; //como no tiene canciones, se inicializa su cantidad en 0.
                 listaDeReproduccion->canciones = createList();
-                pushBack(listaDeListas, listaDeReproduccion);
+                pushBack(listaDeListas, listaDeReproduccion); //la lista se agrega a la lista de listas.
         }
 
+        //Si la lista no contiene ninguna canción, se agrega al principio de ésta.
         if (!firstList(listaDeReproduccion->canciones))
         {
-                pushFront(listaDeReproduccion->canciones, cancionAgregada); //primera canción de la lista de reproducción
+                pushFront(listaDeReproduccion->canciones, cancionAgregada);
+                printf("Su cancion fue agregada.\n");
+                listaDeReproduccion->cantidad++;
+                pushBack(listaGlobal, cancionAgregada);
+                return;
         }
         else
         {
+                //La canción auxilar se vuelve en la primera de la lista para empezar a buscar.
                 cancionAuxiliar = firstList(listaDeReproduccion->canciones);
                 while(cancionAuxiliar != NULL)
                 {
-                        //comparar nombre de la canción
-                        //if (strcmp(cancionAgregada->nombreC, nombre) == 0 && strcmp(cancionAgregada->artista, artista) == 0 &&
-                        //    strcmp(cancionAgregada->generos, generos) == 0 && cancionAgregada->year == anyo)
+                        //Comparación de canciones.
                         if (cancionAuxiliar == cancionAgregada)
                         {
-                                //la canción ya está en la lista
+                                //Si la canción ya está en la lista, se retorna al main.
                                 printf("LA CANCIÓN YA ESTÁ EN LA LISTA.\n");
                                 return;
                         }
@@ -320,11 +323,6 @@ void eliminar_cancion(char* nombre, char* artista, int anyo)
                               popCurrent(listaDeReproduccion->canciones);
                               listaDeReproduccion->cantidad--;
                               printf("Cancion eliminada correctamente\n");
-                              if (listaDeReproduccion->cantidad == 0)
-                              {
-                                        cleanList(listaDeReproduccion->canciones);
-                                        return;
-                              }
                               return;
                         }
                         cancion = nextList(listaDeReproduccion->canciones);
@@ -351,7 +349,6 @@ void mostrarCancionesListaRep(char* Lista_reproduccion)
             if (strcmp(aux->nombre, Lista_reproduccion) == 0)
             {
                 listaDeReproduccion = aux;
-                //printf("Nombre de la lista aux: %s\n", aux->nombre);
                 break;
             }
             aux = nextList(listaDeListas);
@@ -390,6 +387,11 @@ void mostrarTodasLasCanciones (List* listaGlobal)
         datos_cancion = nextList(listaGlobal);
         if (!datos_cancion)
                 break;
+     }
+
+     if (!firstList(listaGlobal))
+     {
+             printf("No hay canciones!\n");
      }
 }
 
