@@ -312,31 +312,21 @@ void eliminar_cancion(char* nombre, char* artista, int anyo)
                 {
                         if (strcmp(cancion->artista, artista) == 0 && strcmp(cancion->nombreC, nombre) == 0 && cancion->year == anyo)
                         {
-                              printf("Cancion a la que apunta: %s\n", cancion->nombreC);
                               popCurrent(listaDeReproduccion->canciones);
                               listaDeReproduccion->cantidad--;
                               printf("Cancion eliminada correctamente\n");
+                              if (listaDeReproduccion->cantidad == 0)
+                              {
+                                        cleanList(listaDeReproduccion->canciones);
+                                        return;
+                              }
                               return;
                         }
                         cancion = nextList(listaDeReproduccion->canciones);
                 }
                 listaDeReproduccion = nextList(listaDeListas);
         }
-    if (!firstList(listaDeReproduccion->canciones))
-    {
-        free(listaDeReproduccion->canciones);
-        listaDeReproduccion->canciones = NULL;
-        /*listaCanciones* listaAuxiliar = firstList(listaDeListas);
-        while (listaAuxiliar != NULL)
-        {
-                if (listaAuxiliar = listaDeReproduccion)
-                {
-                        popCurrent(listaDeListas);
-                        break;
-                }
-                listaAuxiliar = nextList(listaDeListas);
-        }*/
-    }
+        
     printf("No existe ninguna cancion que coincida con los datos ingresados.\n");
 }
 
