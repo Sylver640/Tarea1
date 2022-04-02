@@ -169,7 +169,7 @@ void buscarCancionGenero (char* genero)
 
 void agregarCancion (char *nombre, char *artista, char *generos, int anyo, char *Lista_reproduccion, List* listaGlobal) 
 {
-         //inicializar la lista de listas si no se ha ocupado antes
+        //inicializar la lista de listas si no se ha ocupado antes
         if (listaDeListas == NULL)
         {
                 listaDeListas = createList();
@@ -178,6 +178,7 @@ void agregarCancion (char *nombre, char *artista, char *generos, int anyo, char 
         listaCanciones* listaDeReproduccion;
         tipoCancion* cancionAgregada = (tipoCancion*)malloc(sizeof(tipoCancion));
         tipoCancion* cancionAuxiliar;
+
         //la canción no está guardada, hay que agregarla en la lista (junto a todos los datos que trae)
         strcpy(cancionAgregada->nombreC, nombre);
         strcpy(cancionAgregada->artista, artista);
@@ -218,7 +219,6 @@ void agregarCancion (char *nombre, char *artista, char *generos, int anyo, char 
         else
         {
                 cancionAuxiliar = firstList(listaDeReproduccion->canciones);
-                printf("%s\n", cancionAgregada->nombreC);
                 while(cancionAuxiliar != NULL)
                 {
                         //comparar nombre de la canción
@@ -324,6 +324,48 @@ void eliminar_cancion(char* nombre, char* artista, int anyo)
     printf("No existe ninguna cancion que coincida con los datos ingresados.\n");
 }
 
+void mostrarCancionesListaRep(char* Lista_reproduccion)
+{
+     listaCanciones* aux = firstList(listaDeListas);
+     listaCanciones* listaDeReproduccion = NULL;
+
+     if (!firstList(listaDeListas))
+     {
+             printf("No existen listas!\n");
+             return;
+     }
+
+     while(aux != NULL)
+     {
+            if (strcmp(aux->nombre, Lista_reproduccion) == 0)
+            {
+                listaDeReproduccion = aux;
+                //printf("Nombre de la lista aux: %s\n", aux->nombre);
+                break;
+            }
+            aux = nextList(listaDeListas);
+     }
+
+     if (listaDeReproduccion == NULL)
+     {
+        printf("La lista ingresada no existe\n");
+        return;
+     }
+     
+     tipoCancion* datos_cancion = firstList(listaDeReproduccion->canciones);
+     while (listaDeReproduccion->canciones != NULL)
+     {
+        printf("Nombre: %s\n", datos_cancion->nombreC);
+        printf("Artista: %s\n", datos_cancion->artista);
+        printf("Genero(s): %s\n", datos_cancion->generos);
+        printf("Año: %i\n", datos_cancion->year);
+        printf("Lista de reproduccion: %s\n", datos_cancion->Lista_reproduccion);
+        datos_cancion = nextList(listaDeReproduccion->canciones);
+        if (!datos_cancion)
+                break;
+     }
+}
+
 
 void main()
 {
@@ -416,7 +458,11 @@ void main()
                     break;
             case 8: mostrarListasRep(listaDeListas);
                     break;
-            case 9: printf("FUNCION NO IMPLEMENTADA\n");
+            case 9: printf("Ingrese el nombre de la lista de reproducción: ");
+                    getchar();
+                    scanf("%100[^\n]s", Lista_reproduccion);
+                    getchar();
+                    mostrarCancionesListaRep(Lista_reproduccion);
                     break;
             case 10: printf("FUNCION NO IMPLEMENTADA\n");
                      break;
