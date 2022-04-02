@@ -177,6 +177,13 @@ void agregarCancion (char *nombre, char *artista, char *generos, int anyo, char 
 
         listaCanciones* listaDeReproduccion;
         tipoCancion* cancionAgregada = (tipoCancion*)malloc(sizeof(tipoCancion));
+        tipoCancion* cancionAuxiliar;
+        //la canción no está guardada, hay que agregarla en la lista (junto a todos los datos que trae)
+        strcpy(cancionAgregada->nombreC, nombre);
+        strcpy(cancionAgregada->artista, artista);
+        strcpy(cancionAgregada->generos, generos);
+        cancionAgregada->year = anyo;
+        strcpy(cancionAgregada->Lista_reproduccion, Lista_reproduccion);
         
         //buscar la lista especificada para ver si existe
         listaDeReproduccion = firstList(listaDeListas);
@@ -210,14 +217,14 @@ void agregarCancion (char *nombre, char *artista, char *generos, int anyo, char 
         }
         else
         {
-                cancionAgregada = firstList(listaDeReproduccion->canciones);
+                cancionAuxiliar = firstList(listaDeReproduccion->canciones);
                 printf("%s\n", cancionAgregada->nombreC);
-                while(listaDeReproduccion->canciones != NULL)
+                while(cancionAuxiliar != NULL)
                 {
-
                         //comparar nombre de la canción
-                        if (strcmp(cancionAgregada->nombreC, nombre) == 0 && strcmp(cancionAgregada->artista, artista) == 0 &&
-                            strcmp(cancionAgregada->generos, generos) == 0 && cancionAgregada->year == anyo)
+                        //if (strcmp(cancionAgregada->nombreC, nombre) == 0 && strcmp(cancionAgregada->artista, artista) == 0 &&
+                        //    strcmp(cancionAgregada->generos, generos) == 0 && cancionAgregada->year == anyo)
+                        if (cancionAuxiliar == cancionAgregada)
                         {
                                 //la canción ya está en la lista
                                 printf("LA CANCIÓN YA ESTÁ EN LA LISTA.\n");
@@ -226,20 +233,10 @@ void agregarCancion (char *nombre, char *artista, char *generos, int anyo, char 
                         else
                         {
                                 //revisar siguiente canción
-                                cancionAgregada = nextList(listaDeReproduccion->canciones);
-                                printf("%s\n", cancionAgregada->nombreC);
-                                if (!nextList(listaDeReproduccion->canciones))
-                                        break;
+                                cancionAuxiliar = nextList(listaDeReproduccion->canciones);
                         }
                 }
         }
-
-        //la canción no está guardada, hay que agregarla en la lista (junto a todos los datos que trae)
-        strcpy(cancionAgregada->nombreC, nombre);
-        strcpy(cancionAgregada->artista, artista);
-        strcpy(cancionAgregada->generos, generos);
-        cancionAgregada->year = anyo;
-        strcpy(cancionAgregada->Lista_reproduccion, Lista_reproduccion);
    
         //Aumenta el número de canciones que tiene la lista
         listaDeReproduccion->cantidad++;
