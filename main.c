@@ -216,7 +216,7 @@ void agregarCancion (char *nombre, char *artista, char *generos, int anyo, char 
                 pushBack(listaDeListas, listaDeReproduccion); //la lista se agrega a la lista de listas.
         }
 
-        //Si la lista no contiene ninguna canción, se agrega al principio de ésta.
+        //Si la lista no contiene ninguna canción, se agrega al principio de ésta y retorna.
         if (!firstList(listaDeReproduccion->canciones))
         {
                 pushFront(listaDeReproduccion->canciones, cancionAgregada);
@@ -266,6 +266,7 @@ void importarCanciones(char* nombre_archivo, List* listaGlobal){
     }
     else
     {
+        //Si no, se le informa al usuario que fue encontrado y abierto con éxito
         printf("\nSu archivo fue abierto correctamente!\n");
     }
     
@@ -282,7 +283,8 @@ void importarCanciones(char* nombre_archivo, List* listaGlobal){
                 char *artista = get_csv_field(linea, i+1);
                 char *generos = get_csv_field(linea, i+2);
                 char *anyo = get_csv_field(linea, i+3);
-                int anyoAEntero = atoi(anyo);
+                int anyoAEntero = atoi(anyo); //como la variable "anyo" devuelve un string, es necesario transformarlo a entero
+                                              //debido a la naturaleza de la función agregar.
                 char *lista = get_csv_field(linea, i+4);
                 agregarCancion(nombre, artista, generos, anyoAEntero, lista, listaGlobal);
         }
@@ -293,35 +295,53 @@ void importarCanciones(char* nombre_archivo, List* listaGlobal){
 }
 
 void mostrarListasRep(List* listaDeListas){
-        listaCanciones* aux = firstList(listaDeListas);
-        if(aux == NULL){
+        listaCanciones* aux = firstList(listaDeListas); //Auxiliar que ayuda a recorrer la lista.
+        if(aux == NULL){ //Si no existe ninguna lista, se le informa al usuario y finaliza la función.
                 printf("NO HAY LISTAS CREADAS\n");
                 return;
         } else{
+                //En cambio, se recorre la lista de listas para enumerar cada lista de reproducción
                 while (aux != NULL)
                 {
+                   //Según cada situación, se imprimirá un mensaje por cada lista.
                    if (aux->cantidad == 1)
                         printf("La lista denominada %s contiene 1 cancion\n", aux->nombre);
-                   else
+                   if (aux->cantidad <= 0)
+                        printf("La lista denominada %s no contiene ninguna cancion\n", aux->nombre);
+                   if (aux->cantidad > 1)
                         printf("La lista denominada %s contiene %i canciones\n", aux->nombre, aux->cantidad);
                    aux = nextList(listaDeListas);
                 }
         }
 }
 
-void eliminar_cancion(char* nombre, char* artista, int anyo)
+void eliminar_deListaGlobal(List* listaGlobal, char *nombre,char *artista, int anyo)
 {
-   listaCanciones* listaDeReproduccion = firstList(listaDeListas);
+     tipoCancion* datos_cancion = firstList(listaGlobal);
+     while (datos_cancion != NULL) //se recorre la lista global canción por canción.
+     {
+        if(strcmp(datos_cancion->nombreC, nombre)==0 && (strcmp(datos_cancion->artista, artista) == 0) && datos_cancion->year == anyo)
+              popCurrent(listaGlobal); //se elimina si se encuentra la canción.
+        datos_cancion=nextList(listaGlobal);
+     } 
+}
+
+void eliminar_cancion(char* nombre, char* artista, int anyo, List* listaGlobal)
+{
+     listaCanciones* listaDeReproduccion = firstList(listaDeListas);
      while (listaDeReproduccion != NULL)
         {
-                //iterar canción por canción
+                //iterar canción por canción y lista por lista.
                 tipoCancion* cancion = firstList(listaDeReproduccion->canciones);
                 while (cancion != NULL)
                 {
+                        //Se ve si son iguales los parámetros de artista, nombre y año.
                         if (strcmp(cancion->artista, artista) == 0 && strcmp(cancion->nombreC, nombre) == 0 && cancion->year == anyo)
                         {
-                              popCurrent(listaDeReproduccion->canciones);
-                              listaDeReproduccion->cantidad--;
+                              eliminar_deListaGlobal(listaGlobal, nombre, artista, anyo); //Función que elimina la canción de la lista global, 
+                                                                                          //con tal de que no queden rastros de ésta.
+                              popCurrent(listaDeReproduccion->canciones); //Se elimina la canción de la lista.
+                              listaDeReproduccion->cantidad--; //La cantidad de canciones disminuye en una unidad.
                               printf("Cancion eliminada correctamente\n");
                               return;
                         }
@@ -335,31 +355,36 @@ void eliminar_cancion(char* nombre, char* artista, int anyo)
 
 void mostrarCancionesListaRep(char* Lista_reproduccion)
 {
-     listaCanciones* aux = firstList(listaDeListas);
-     listaCanciones* listaDeReproduccion = NULL;
+     listaCanciones* aux = firstList(listaDeListas); //Auxiliar para recorrer la lista.
+     listaCanciones* listaDeReproduccion = NULL; //Inicializada en NULL para comprobar más tarde la existencia de alguna lista 
+                                                 //con el mismo nombre requerido
 
+     //Si ya al empezar a recorrer la lista se ve que no hay ningún primer elemento, se ve que no hay ninguna lista creada.
      if (!firstList(listaDeListas))
      {
              printf("No existen listas!\n");
              return;
      }
-
-     while(aux != NULL)
+     
+     //En cambio, si ya existen listas, se van comprobando para ver si existe la indicada por el usuario.
+     while(aux != NULL) //Se usa el auxiliar para buscar lista por lista
      {
             if (strcmp(aux->nombre, Lista_reproduccion) == 0)
             {
-                listaDeReproduccion = aux;
+                listaDeReproduccion = aux; //si se encuentra, la variable listaDeReproduccion se transforma en aux.
                 break;
             }
             aux = nextList(listaDeListas);
      }
-
+     
+     //Esto pasa si se ve que el nombre dado por el usuario no corresponde a ninguna lista.
      if (listaDeReproduccion == NULL)
      {
         printf("La lista ingresada no existe\n");
         return;
      }
      
+     //Finalmente, se recorre toda la lista indicada y se imprimen todas sus canciones.
      tipoCancion* datos_cancion = firstList(listaDeReproduccion->canciones);
      while (listaDeReproduccion->canciones != NULL)
      {
@@ -369,15 +394,15 @@ void mostrarCancionesListaRep(char* Lista_reproduccion)
         printf("Año: %i\n", datos_cancion->year);
         printf("Lista de reproduccion: %s\n", datos_cancion->Lista_reproduccion);
         datos_cancion = nextList(listaDeReproduccion->canciones);
-        if (!datos_cancion)
+        if (!datos_cancion) //Si se ve que el siguiente dato no existe, simplemente finaliza el ciclo.
                 break;
      }
 }
 
 void mostrarTodasLasCanciones (List* listaGlobal)
 {
-     tipoCancion* datos_cancion = firstList(listaGlobal);
-     while (datos_cancion != NULL)
+     tipoCancion* datos_cancion = firstList(listaGlobal); //variable para recorrer la lista global.
+     while (datos_cancion != NULL) //ciclo para imprimir cada canción dentro de esta lista global.
      {
         printf("Nombre: %s\n", datos_cancion->nombreC);
         printf("Artista: %s\n", datos_cancion->artista);
@@ -388,7 +413,8 @@ void mostrarTodasLasCanciones (List* listaGlobal)
         if (!datos_cancion)
                 break;
      }
-
+     
+     //Si no hay ninguna canción, se imprime este mensaje en pantalla y finaliza la función.
      if (!firstList(listaGlobal))
      {
              printf("No hay canciones!\n");
@@ -481,7 +507,7 @@ void main()
                     printf("Ingrese el año de la cancion: ");
                     scanf("%d", &anyo);
                     getchar();
-                    eliminar_cancion(nombre, artista, anyo);
+                    eliminar_cancion(nombre, artista, anyo, listaGlobal);
                     break;
             case 8: mostrarListasRep(listaDeListas);
                     break;
