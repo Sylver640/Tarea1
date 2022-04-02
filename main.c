@@ -5,24 +5,26 @@
 #include <stdbool.h>
 #include "list.h"
 
-//crear lista de listas, global para que sea fácil de acceder desde distintas funciones (base de datos)
+//Crear lista de listas, global para que sea fácil de acceder desde distintas funciones (base de datos)
 List* listaDeListas = NULL;
 
+//Struct que guarda los datos de cada canción.
 typedef struct{
     char nombreC[30];
     int year;
     char artista[15];
     char generos[50]; //por las funciones que debemos implementar debería ser char**
-    char Lista_reproduccion[50]; //faltaba esta variable para agregar canciones
-    //ListaCanciones* listaC; quizás no sea necesario esto 
+    char Lista_reproduccion[50];
 } tipoCancion;
 
+//Struct que guarda todos los datos necesarios para trabajar con una lista.
 typedef struct{
     int cantidad;
     List* canciones;
     char nombre[30];
 } listaCanciones;
 
+//Función que recibe campos de un archivo CSV separado por comas.
 char *get_csv_field (char * tmp, int k) {
     int open_mark = 0;
     char* ret=(char*) malloc (100*sizeof(char));
@@ -93,6 +95,7 @@ void buscarCancionNombre (char* nombre)
                         }
                         cancion = nextList(listaDeReproduccion->canciones);
                 }
+                //Si no se encuentra en una lista, avanza a la otra.
                 listaDeReproduccion = nextList(listaDeListas);
         }
         if (encontrado == false)
@@ -126,6 +129,7 @@ void buscarCancionArtista (char* artista)
                         }
                         cancion = nextList(listaDeReproduccion->canciones);
                 }
+                //Si no se encuentra en una lista, avanza a la otra.
                 listaDeReproduccion = nextList(listaDeListas);
         }
         if (encontrado == false)
@@ -159,6 +163,7 @@ void buscarCancionGenero (char* genero)
                         }
                         cancion = nextList(listaDeReproduccion->canciones);
                 }
+                //Si no se encuentra en una lista, avanza a la otra.
                 listaDeReproduccion = nextList(listaDeListas);
         }
         if (encontrado == false)
@@ -177,9 +182,9 @@ void agregarCancion (char *nombre, char *artista, char *generos, int anyo, char 
 
         listaCanciones* listaDeReproduccion;
         tipoCancion* cancionAgregada = (tipoCancion*)malloc(sizeof(tipoCancion));
-        tipoCancion* cancionAuxiliar;
+        tipoCancion* cancionAuxiliar; //esta variable nos servirá para comprobar los datos
 
-        //la canción no está guardada, hay que agregarla en la lista (junto a todos los datos que trae)
+        //Se copian todos los datos 
         strcpy(cancionAgregada->nombreC, nombre);
         strcpy(cancionAgregada->artista, artista);
         strcpy(cancionAgregada->generos, generos);
@@ -326,7 +331,7 @@ void eliminar_cancion(char* nombre, char* artista, int anyo)
                 }
                 listaDeReproduccion = nextList(listaDeListas);
         }
-        
+
     printf("No existe ninguna cancion que coincida con los datos ingresados.\n");
 }
 
@@ -374,9 +379,19 @@ void mostrarCancionesListaRep(char* Lista_reproduccion)
 
 void mostrarTodasLasCanciones (List* listaGlobal)
 {
-        return;
+     tipoCancion* datos_cancion = firstList(listaGlobal);
+     while (datos_cancion != NULL)
+     {
+        printf("Nombre: %s\n", datos_cancion->nombreC);
+        printf("Artista: %s\n", datos_cancion->artista);
+        printf("Genero(s): %s\n", datos_cancion->generos);
+        printf("Año: %i\n", datos_cancion->year);
+        printf("Lista de reproduccion: %s\n", datos_cancion->Lista_reproduccion);
+        datos_cancion = nextList(listaGlobal);
+        if (!datos_cancion)
+                break;
+     }
 }
-
 
 void main()
 {
@@ -390,7 +405,6 @@ void main()
     FILE* archivoCanciones;
     int option;
     char archivo[101];
-    bool existe_cancion;
 
     while (option != 0)
     {
@@ -475,7 +489,7 @@ void main()
                     getchar();
                     mostrarCancionesListaRep(Lista_reproduccion);
                     break;
-            case 10: printf("FUNCION NO IMPLEMENTADA\n");
+            case 10: mostrarTodasLasCanciones(listaGlobal);
                      break;
             case 0: break;
         }
