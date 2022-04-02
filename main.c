@@ -266,7 +266,6 @@ void importarCanciones(char* nombre_archivo, List* listaGlobal){
     int i;
     int k = 0;
     //Para este while, se empieza desde la primera línea del archivo, hasta que llegue al final.
-    //FALTA TERMINAR ESTA PARTE. LO ÚNICO QUE HACE ES IMPRIMIR LAS LÍNEAS.
     while (fgets(linea, 1023, archivoCanciones) != NULL)
     {
         for (i = 0; i < 1; i++)
@@ -313,7 +312,9 @@ void eliminar_cancion(char* nombre, char* artista, int anyo)
                 {
                         if (strcmp(cancion->artista, artista) == 0 && strcmp(cancion->nombreC, nombre) == 0 && cancion->year == anyo)
                         {
+                              printf("Cancion a la que apunta: %s\n", cancion->nombreC);
                               popCurrent(listaDeReproduccion->canciones);
+                              listaDeReproduccion->cantidad--;
                               printf("Cancion eliminada correctamente\n");
                               return;
                         }
@@ -321,6 +322,21 @@ void eliminar_cancion(char* nombre, char* artista, int anyo)
                 }
                 listaDeReproduccion = nextList(listaDeListas);
         }
+    if (!firstList(listaDeReproduccion->canciones))
+    {
+        free(listaDeReproduccion->canciones);
+        listaDeReproduccion->canciones = NULL;
+        /*listaCanciones* listaAuxiliar = firstList(listaDeListas);
+        while (listaAuxiliar != NULL)
+        {
+                if (listaAuxiliar = listaDeReproduccion)
+                {
+                        popCurrent(listaDeListas);
+                        break;
+                }
+                listaAuxiliar = nextList(listaDeListas);
+        }*/
+    }
     printf("No existe ninguna cancion que coincida con los datos ingresados.\n");
 }
 
@@ -364,6 +380,11 @@ void mostrarCancionesListaRep(char* Lista_reproduccion)
         if (!datos_cancion)
                 break;
      }
+}
+
+void mostrarTodasLasCanciones (List* listaGlobal)
+{
+        return;
 }
 
 
