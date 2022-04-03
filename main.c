@@ -13,7 +13,8 @@ typedef struct{
     char nombreC[30];
     int year;
     char artista[15];
-    char generos[50]; //por las funciones que debemos implementar debería ser char**
+    char **generos; //por las funciones que debemos implementar debería ser char**
+    int cantidadGeneros;
     char Lista_reproduccion[50];
 } tipoCancion;
 
@@ -64,10 +65,42 @@ char *get_csv_field (char * tmp, int k) {
     return NULL;
 }
 
-void exportarCanciones (char* nombre_archivo)
+void exportarCanciones (char* nombre_archivo, List *listaGlobal)
 {
+        //Se abre, o crea si no existe, el archivo con el nombre indicado por el usuario
         FILE *archivoCanciones = fopen(nombre_archivo, "wt");
-        return;
+        tipoCancion* cancion2Archivo = firstList(listaGlobal); //Para recorrer la lista global
+        while (cancion2Archivo != NULL)
+        {
+                //Con diferentes comandos, como fputs y fputc, se escribe directamente en el archivo
+                fputs(cancion2Archivo->nombreC, archivoCanciones);
+                fputc(',', archivoCanciones);
+                fputs(cancion2Archivo->artista, archivoCanciones);
+                fputc(',', archivoCanciones);
+                if (cancion2Archivo->cantidadGeneros > 1) //si es más de un género, se va a un ciclo para escribirlos uno por uno con el formato habitual.
+                {
+                        fputc('"', archivoCanciones);
+                        fputs(cancion2Archivo->generos[0], archivoCanciones);
+                        for (int i = 1; i < cancion2Archivo->cantidadGeneros; i++)
+                        {
+                                fputc(',', archivoCanciones);
+                                fputc(' ', archivoCanciones);
+                                fputs(cancion2Archivo->generos[i], archivoCanciones);
+                        }
+                        fputc('"', archivoCanciones);
+                }
+                else
+                        fputs(cancion2Archivo->generos[0], archivoCanciones); //En cambio, solo se imprime sin comillas ni comas extras.
+                fputc(',', archivoCanciones);       
+                fprintf(archivoCanciones, "%d", cancion2Archivo->year);
+                fputc(',', archivoCanciones);
+                fputs(cancion2Archivo->Lista_reproduccion, archivoCanciones);
+                fputc('\n', archivoCanciones);
+                cancion2Archivo = nextList(listaGlobal);
+                if (!cancion2Archivo)
+                        break;    
+        }
+        fclose(archivoCanciones);
 }
 
 void buscarCancionNombre (char* nombre)
@@ -88,7 +121,12 @@ void buscarCancionNombre (char* nombre)
                                 //se encontró una canción con ese nombre
                                 printf("Nombre: %s\n", cancion->nombreC);
                                 printf("Artista: %s\n", cancion->artista);
-                                printf("Genero(s): %s\n", cancion->generos);
+                                printf("Generos: ");
+                                for (int i = 0; i < cancion->cantidadGeneros; i++)
+                                {
+                                        printf("%s ", cancion->generos[i]);
+                                }
+                                printf("\n");
                                 printf("Año: %i\n", cancion->year);
                                 printf("Lista de reproduccion: %s\n", cancion->Lista_reproduccion);
                                 encontrado = true;
@@ -122,7 +160,12 @@ void buscarCancionArtista (char* artista)
                                 //se encontró una canción con el artista ingresado
                                 printf("Nombre: %s\n", cancion->nombreC);
                                 printf("Artista: %s\n", cancion->artista);
-                                printf("Genero(s): %s\n", cancion->generos);
+                                printf("Generos: ");
+                                for (int i = 0; i < cancion->cantidadGeneros; i++)
+                                {
+                                        printf("%s ", cancion->generos[i]);
+                                }
+                                printf("\n");
                                 printf("Año: %i\n", cancion->year);
                                 printf("Lista de reproduccion: %s\n", cancion->Lista_reproduccion);
                                 encontrado = true;
@@ -138,7 +181,7 @@ void buscarCancionArtista (char* artista)
         }
 }
 
-void buscarCancionGenero (char* genero)
+void buscarCancionGenero (char* generoABuscar)
 {
         //bool para ver si se encontró alguna canción con el genero ingresado
         bool encontrado = false;
@@ -151,15 +194,23 @@ void buscarCancionGenero (char* genero)
                 tipoCancion* cancion = firstList(listaDeReproduccion->canciones);
                 while (cancion != NULL)
                 {
-                        if (strcmp(cancion->generos, genero) == 0) //esta funcion tienen que coincidir mayusculas y minusculas, es un problema?
+                        for (int i = 0; i < cancion->cantidadGeneros; i++) //según la cantidad de géneros, se va buscando por cada canción
                         {
-                                //se encontró una canción con ese genero
-                                printf("Nombre: %s\n", cancion->nombreC);
-                                printf("Artista: %s\n", cancion->artista);
-                                printf("Genero(s): %s\n", cancion->generos);
-                                printf("Año: %i\n", cancion->year);
-                                printf("Lista de reproduccion: %s\n", cancion->Lista_reproduccion);
-                                encontrado = true;
+                                if (strcmp(cancion->generos[i], generoABuscar) == 0) //si se encuentra exactamente un género, se entra a este if
+                                {
+                                        //se encontró una canción con ese genero
+                                        printf("Nombre: %s\n", cancion->nombreC);
+                                        printf("Artista: %s\n", cancion->artista);
+                                        printf("Generos: ");
+                                        for (int i = 0; i < cancion->cantidadGeneros; i++)
+                                        {
+                                                printf("%s ", cancion->generos[i]);
+                                        }
+                                        printf("\n");
+                                        printf("Año: %i\n", cancion->year);
+                                        printf("Lista de reproduccion: %s\n", cancion->Lista_reproduccion);
+                                        encontrado = true;
+                                }
                         }
                         cancion = nextList(listaDeReproduccion->canciones);
                 }
@@ -172,7 +223,7 @@ void buscarCancionGenero (char* genero)
         }
 }
 
-void agregarCancion (char *nombre, char *artista, char *generos, int anyo, char *Lista_reproduccion, List* listaGlobal) 
+void agregarCancion (char *nombre, char *artista, char **generos, int anyo, char *Lista_reproduccion, List* listaGlobal, int cantidadGeneros) 
 {
         //inicializar la lista de listas si no se ha ocupado antes
         if (listaDeListas == NULL)
@@ -187,7 +238,14 @@ void agregarCancion (char *nombre, char *artista, char *generos, int anyo, char 
         //Se copian todos los datos dados por el usuario a canciónAgregada
         strcpy(cancionAgregada->nombreC, nombre);
         strcpy(cancionAgregada->artista, artista);
-        strcpy(cancionAgregada->generos, generos);
+        //Se reserva memoria para la variable generos
+        cancionAgregada->generos = (char**) malloc (cantidadGeneros * sizeof(char*));
+        for (int i = 0; i < cantidadGeneros; i++)
+        {
+                cancionAgregada->generos[i] = (char *) malloc (100*sizeof(char));
+                strcpy(cancionAgregada->generos[i], generos[i]); //se copia cada genero indicado por el usuario en el main
+        }
+        cancionAgregada->cantidadGeneros = cantidadGeneros;
         cancionAgregada->year = anyo;
         strcpy(cancionAgregada->Lista_reproduccion, Lista_reproduccion);
         
@@ -255,6 +313,54 @@ void agregarCancion (char *nombre, char *artista, char *generos, int anyo, char 
         pushBack(listaGlobal, cancionAgregada);
 }
 
+char** separarGeneros(char *generos)
+{       
+        int i = 0;
+        const char* limite = ", "; //indica hasta qué parte se debe copiar una parte del string
+        char* token; //utilizado por la función strtok, proveída por string.h
+        int cantidadGeneros = 1; //inicializada en 1 para facilitar la ejecución
+        for (int i = 0; generos[i] != '\0'; i++)
+        {
+                if (generos[i] == ',')
+                        cantidadGeneros++; //solo se aumenta en uno si detecta una coma entre cada género
+        }
+
+        //Reserva de memoria del arreglo a retornar con todos los géneros
+        char **generosDivididos = (char**) malloc (cantidadGeneros * sizeof(char*));
+        //Si solo es un género, solo se copia en un espacio el string entero por cada carácter
+        if (cantidadGeneros == 1)
+        {
+                generosDivididos[0] = (char *) malloc (100*sizeof(char));
+                for (int i = 0; generos[i] != '\0'; i++)
+                        generosDivididos[0][i] = generos[i];
+        }
+        else //Si existe más de un género, se entra a esta sección
+        {
+                token = strtok(generos, limite); //el token se convierte en aquello que se encuentra entre el principio de "generos" y el límite
+                while (token != NULL)
+                {
+                        generosDivididos[i] = (char *) malloc (100*sizeof(char));
+                        generosDivididos[i] = token;
+                        token = strtok(NULL, limite); //el token ahora pasa a ser la siguiente posición luego de la coma.
+                        i++; //se aumenta en una unidad con tal de guardar el siguiente token en la siguiente posición del arreglo
+                }
+        }
+
+        return generosDivididos;
+}
+
+int contarGeneros(char *generos)
+{
+        //Función simple que solo cuenta los géneros. Reutilizada de la función separarGéneros.
+        int cantidadGeneros = 1;
+        for (int i = 0; generos[i] != '\0'; i++)
+        {
+                if (generos[i] == ',')
+                        cantidadGeneros++;
+        }
+        return cantidadGeneros;
+}
+
 void importarCanciones(char* nombre_archivo, List* listaGlobal){
 
     FILE *archivoCanciones = fopen(nombre_archivo, "rt"); //Se busca y abre el archivo indicado por el usuario.
@@ -282,11 +388,13 @@ void importarCanciones(char* nombre_archivo, List* listaGlobal){
                 char *nombre = get_csv_field(linea, i);
                 char *artista = get_csv_field(linea, i+1);
                 char *generos = get_csv_field(linea, i+2);
+                char** generosDivididos = separarGeneros(generos);
+                int cantidadGeneros = contarGeneros(generos);
                 char *anyo = get_csv_field(linea, i+3);
                 int anyoAEntero = atoi(anyo); //como la variable "anyo" devuelve un string, es necesario transformarlo a entero
                                               //debido a la naturaleza de la función agregar.
                 char *lista = get_csv_field(linea, i+4);
-                agregarCancion(nombre, artista, generos, anyoAEntero, lista, listaGlobal);
+                agregarCancion(nombre, artista, generosDivididos, anyoAEntero, lista, listaGlobal, cantidadGeneros);
         }
         k++;
     }
@@ -366,6 +474,7 @@ void mostrarCancionesListaRep(char* Lista_reproduccion)
              return;
      }
      
+     
      //En cambio, si ya existen listas, se van comprobando para ver si existe la indicada por el usuario.
      while(aux != NULL) //Se usa el auxiliar para buscar lista por lista
      {
@@ -383,6 +492,12 @@ void mostrarCancionesListaRep(char* Lista_reproduccion)
         printf("La lista ingresada no existe\n");
         return;
      }
+
+     if (!firstList(listaDeReproduccion->canciones))
+     {
+             printf("Esta lista no contiene canciones!\n");
+             return;
+     }
      
      //Finalmente, se recorre toda la lista indicada y se imprimen todas sus canciones.
      tipoCancion* datos_cancion = firstList(listaDeReproduccion->canciones);
@@ -390,7 +505,12 @@ void mostrarCancionesListaRep(char* Lista_reproduccion)
      {
         printf("Nombre: %s\n", datos_cancion->nombreC);
         printf("Artista: %s\n", datos_cancion->artista);
-        printf("Genero(s): %s\n", datos_cancion->generos);
+        printf("Genero(s): ");
+        for (int i = 0; i < datos_cancion->cantidadGeneros; i++)
+        {
+                printf("%s ", datos_cancion->generos[i]);
+        }
+        printf("\n");
         printf("Año: %i\n", datos_cancion->year);
         printf("Lista de reproduccion: %s\n", datos_cancion->Lista_reproduccion);
         datos_cancion = nextList(listaDeReproduccion->canciones);
@@ -406,7 +526,12 @@ void mostrarTodasLasCanciones (List* listaGlobal)
      {
         printf("Nombre: %s\n", datos_cancion->nombreC);
         printf("Artista: %s\n", datos_cancion->artista);
-        printf("Genero(s): %s\n", datos_cancion->generos);
+        printf("Genero(s): ");
+        for (int i = 0; i < datos_cancion->cantidadGeneros; i++)
+        {
+                printf("%s ", datos_cancion->generos[i]);
+        }
+        printf("\n");
         printf("Año: %i\n", datos_cancion->year);
         printf("Lista de reproduccion: %s\n", datos_cancion->Lista_reproduccion);
         datos_cancion = nextList(listaGlobal);
@@ -423,17 +548,20 @@ void mostrarTodasLasCanciones (List* listaGlobal)
 
 void main()
 {
+    //Inicialización de variables
     List* listaGlobal = createList();
     char* nombre = (char*) malloc (100*sizeof(char)); 
     char* artista = (char*) malloc (100*sizeof(char));
     char* Lista_reproduccion = (char*) malloc (100*sizeof(char));
-    char* generos = (char*) malloc (100*sizeof(char)); //aca no debería ser char* ?
-    int anyo;
+    char** generos = NULL;
+    int anyo, cantidadGeneros;
     tipoCancion* datos;
     FILE* archivoCanciones;
     int option;
     char archivo[101];
-
+    char generoABuscar[101];
+    
+    //Creación de menú
     while (option != 0)
     {
         printf("1. Importar canciones desde el archivo\n");
@@ -459,7 +587,7 @@ void main()
                     break;
             case 2: printf("\nIngrese el nombre del archivo que desea crear (o sobreescribir): ");
                     scanf("%s", &archivo);
-                    exportarCanciones(archivo);
+                    exportarCanciones(archivo, listaGlobal);
                     break;
             case 3: printf("Ingrese el nombre de la cancion: ");
                     getchar();
@@ -468,16 +596,24 @@ void main()
                     printf("Ingrese el artista de la cancion: ");
                     scanf("%100[^\n]s", artista); 
                     getchar();
-                    printf("Ingrese el genero de la cancion: "); 
-                    scanf("%100[^\n]s", generos);
+                    printf("Cuantos generos tiene su cancion? : ");
+                    scanf("%d", &cantidadGeneros);
                     getchar();
+                    generos = (char**) malloc (cantidadGeneros * sizeof(char*)); //se reserva memoria para crear el arreglo
+                    for (int i = 0; i < cantidadGeneros; i++)
+                    {
+                        generos[i] = (char *) malloc (100*sizeof(char)); //reserva de memoria para cada string dinámico dentro del arreglo
+                        printf("Ingrese el genero de la cancion: "); 
+                        scanf("%100[^\n]s", generos[i]);
+                        getchar();
+                    }
                     printf("Ingrese el año de la cancion: ");
                     scanf("%d", &anyo);
                     getchar();
                     printf("Ingrese la lista de reproduccion en donde quiere agregar la cancion: ");
                     scanf("%100[^\n]s", Lista_reproduccion);
                     getchar();
-                    agregarCancion(nombre, artista, generos, anyo, Lista_reproduccion, listaGlobal);
+                    agregarCancion(nombre, artista, generos, anyo, Lista_reproduccion, listaGlobal, cantidadGeneros);
                     break;
             case 4: printf("Ingrese el nombre de la cancion que desea buscar\n");
                     getchar();
@@ -493,9 +629,9 @@ void main()
                     break;
             case 6: printf("Ingrese el genero de la cancion que desea buscar\n");
                     getchar();
-                    scanf("%[^\n]s", generos);
+                    scanf("%[^\n]s", generoABuscar);
                     getchar();
-                    buscarCancionGenero(generos);
+                    buscarCancionGenero(generoABuscar);
                     break;
             case 7: printf("Ingrese el nombre de la canción a eliminar\n");
                     getchar();
