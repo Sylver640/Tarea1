@@ -68,6 +68,11 @@ void exportarCanciones (char* nombre_archivo, List *listaGlobal)
 {
         //Se abre, o crea si no existe, el archivo con el nombre indicado por el usuario
         FILE *archivoCanciones = fopen(nombre_archivo, "wt");
+        if (archivoCanciones == NULL)
+        {
+                //no pudimos abrir/crear el archivo
+                return;
+        }
         tipoCancion* cancion2Archivo = firstList(listaGlobal); //Para recorrer la lista global
         while (cancion2Archivo != NULL)
         {
