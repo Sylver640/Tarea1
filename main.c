@@ -10,9 +10,9 @@ List* listaDeListas = NULL;
 
 //Struct que guarda los datos de cada canción.
 typedef struct{
-    char nombreC[30];
+    char nombreC[50];
     int year;
-    char artista[15];
+    char artista[30];
     char **generos; //por las funciones que debemos implementar debería ser char**
     int cantidadGeneros;
     char Lista_reproduccion[50];
@@ -53,7 +53,6 @@ char *get_csv_field (char * tmp, int k) {
             }
             j++; ini_i = i+1;
         }
-
         i++;
     }
 
