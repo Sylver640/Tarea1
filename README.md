@@ -1,5 +1,5 @@
 # Tarea1
-Nombre de grupo : Los Showtimers.
+Nombre de grupo : Showtimers.
 Integrantes : Rodrigo Araos.
               Javier Marín.
               Camila Díaz.
@@ -18,9 +18,38 @@ cual efectuará la ejecución del programa
 
 *Funciones que funcionan correctamente:
 
+-> buscarCancionNombre.
+-> buscarCancionArtista.
+-> buscarCancionGenero.
+-> exportarCanciones.
+-> agregarCancion.
+-> contarGeneros.
+-> mostrarListasRep.
+-> eliminar_deListaGlobal.
+-> eliminar_cancion.
+-> mostrarCancionesListaRep.
+-> mostrarTodasLasCanciones.
+
+
+
 *Funciones que no funcionan correctamente:
 
+-> importarCanciones: Al agregar los géneros a la canción añadida, no se copian ni se muestran correctamente en los casos donde las canciones importadas del CSV contienen más de un género.
+Potencialmente sea un problema proveniente de la función separarGeneros que aún no desciframos.
+
+-> separarGeneros: El problema podría residir al momento de separar los tokens, lo cual no se efectúa correctamente.
+
 *Co-evaluación de grupo:
+
+Rodrigo Araos: Atento en los procedimientos de programación como grupo y asistió a todas las ayudantías y reuniones grupales, también ayudó a pulir las funciones de otros compañeros. Faltó mejor comunicación interna. 
+
+Javier Marín: Encargado de proponer ideas para implementar múltiples funciones, también asiste a todas las reuniones grupales y ayudantías. Faltó mejor comunicación interna.
+
+Camila Díaz: Encargada de dar el primer pié como grupo y programar la función agregarCancion, asiste a todas la reuniones grupales y la mayoría de ayudantías. Faltó mejor comunicación interna.
+
+Vicente Mercado: Responde preguntas internas del grupo y asiste a ayudantías y reuniones grupales. Faltó mejor comunicación interna.
+
+Consenso de grupo: Faltó mejor comunicación y organización de los deberes.
 
 *Puntos de premio/castigo:
 
@@ -29,6 +58,4 @@ Javier Marín : 0
 Camila Díaz : 0
 Vicente Mercado : 0
 
-Puntuación total de grupo : 0.
-              
-
+Puntuación total de grupo : 0. 
