@@ -13,7 +13,7 @@ typedef struct{
     char nombreC[50];
     int year;
     char artista[30];
-    char **generos; //por las funciones que debemos implementar debería ser char**
+    char **generos; 
     int cantidadGeneros;
     char Lista_reproduccion[50];
 } tipoCancion;
